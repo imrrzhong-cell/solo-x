@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLO.X — 竹影禅意</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --white:#fafaf7;--off:#f2f0ea;--warm:#e8e4d9;--warm2:#d8d2c2;
+  --sage:#7d9b76;--sage2:#5a7a54;--sage3:#3d5939;
+  --char:#1e1e1e;--char2:#3a3a3a;--char3:#666;
+  --border:rgba(30,30,30,.1);--border2:rgba(30,30,30,.18);
+  --accent:#c4842a;--accent-light:#f0d4a0;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--char);font-family:'Noto Sans SC',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* Bamboo pattern subtle bg */
+.zen-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:repeating-linear-gradient(90deg,var(--char) 0px,var(--char) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,var(--char) 0px,var(--char) 1px,transparent 1px,transparent 60px)}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,250,247,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:1.2rem 6%}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.logo{text-decoration:none;display:flex;align-items:baseline;gap:.5rem}
+.logo-text{font-family:'Noto Serif SC',serif;font-size:1.3rem;font-weight:500;color:var(--char);letter-spacing:.05em}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-bottom:.15rem}
+nav ul{display:flex;gap:2rem;list-style:none}
+nav a{color:var(--char3);text-decoration:none;font-size:.8rem;letter-spacing:.1em;transition:.2s}
+nav a:hover{color:var(--sage2)}
+.nav-cta{background:var(--sage2);color:white!important;padding:.4rem 1.2rem;border-radius:100px;font-size:.78rem!important}
+.nav-cta:hover{background:var(--sage3)!important}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding:7rem 6% 5rem;max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%}
+.hero-kanji{font-family:'Noto Serif SC',serif;font-size:12rem;line-height:1;color:rgba(125,155,118,.08);position:absolute;right:-2rem;top:50%;transform:translateY(-50%);pointer-events:none;user-select:none;letter-spacing:-.05em}
+.hero-left{position:relative}
+.hero-season{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sage);margin-bottom:2rem;display:flex;align-items:center;gap:.7rem}
+.season-line{width:30px;height:1px;background:var(--sage)}
+.hero-title{font-family:'Noto Serif SC',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:500;line-height:1.3;color:var(--char);margin-bottom:1.5rem;letter-spacing:.02em}
+.hero-verse{font-family:'Noto Serif SC',serif;font-size:1rem;line-height:2;color:var(--char3);border-left:2px solid var(--sage);padding-left:1.2rem;margin-bottom:2.5rem;font-style:italic}
+.hero-btns{display:flex;gap:1rem;align-items:center}
+.btn-sage{background:var(--sage2);color:white;padding:.75rem 2rem;border-radius:100px;text-decoration:none;font-size:.82rem;letter-spacing:.1em;transition:.3s}
+.btn-sage:hover{background:var(--sage3);transform:translateY(-1px)}
+.btn-plain{color:var(--char2);text-decoration:none;font-size:.82rem;letter-spacing:.1em;border-bottom:1px solid var(--border2);padding-bottom:.1rem;transition:.2s}
+.btn-plain:hover{color:var(--sage2);border-color:var(--sage2)}
+.hero-right{display:flex;flex-direction:column;gap:1rem}
+.zen-card{background:var(--off);border:1px solid var(--border);padding:1.8rem;border-radius:4px;transition:.3s}
+.zen-card:hover{background:var(--warm);border-color:var(--border2)}
+.zc-num{font-family:'Shippori Mincho',serif;font-size:2rem;color:var(--sage3);margin-bottom:.3rem;font-weight:500}
+.zc-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--char3)}
+.zc-desc{font-size:.78rem;color:var(--char3);margin-top:.4rem;line-height:1.7;font-weight:300}
+
+/* Ink divider */
+.ink-div{display:flex;align-items:center;gap:1.5rem;max-width:1100px;margin:0 auto;padding:0 6%}
+.ink-div::before,.ink-div::after{content:'';flex:1;height:1px;background:var(--border)}
+.ink-sym{color:var(--sage);font-size:.9rem}
+
+/* Section */
+.section{max-width:1100px;margin:0 auto;padding:4rem 6%;position:relative;z-index:1}
+.sec-season{font-size:.62rem;letter-spacing:.4em;text-transform:uppercase;color:var(--sage);margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:500;color:var(--char);margin-bottom:.6rem;letter-spacing:.02em}
+.sec-haiku{font-family:'Noto Serif SC',serif;font-size:.88rem;color:var(--char3);font-style:italic;margin-bottom:2rem;line-height:1.8}
+
+/* Content */
+.ct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:1rem}
+.ct-item{background:var(--white);padding:2rem;transition:.3s;cursor:pointer}
+.ct-item:hover{background:var(--off)}
+.ct-index{font-family:'Shippori Mincho',serif;font-size:1.5rem;color:var(--warm2);font-weight:500;margin-bottom:1rem;display:block}
+.ct-type{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage);margin-bottom:.5rem}
+.ct-name{font-family:'Noto Serif SC',serif;font-size:1.1rem;font-weight:500;color:var(--char);margin-bottom:.5rem;letter-spacing:.02em}
+.ct-desc{font-size:.78rem;color:var(--char3);line-height:1.8;font-weight:300}
+.ct-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:.8rem;border-top:1px solid var(--border)}
+.ct-count{font-size:.7rem;color:var(--char3)}
+.ct-price{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase}
+.price-free{color:var(--sage2)}
+.price-paid{color:var(--accent)}
+
+/* Tools */
+.tools-scroll{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem}
+.tl-item{padding:1.3rem;border:1px solid var(--border);background:var(--white);transition:.3s;border-radius:4px}
+.tl-item:hover{background:var(--off);border-color:var(--border2)}
+.tl-name{font-family:'Noto Serif SC',serif;font-size:.95rem;font-weight:500;color:var(--char);margin-bottom:.3rem}
+.tl-desc{font-size:.73rem;color:var(--char3);line-height:1.7;font-weight:300}
+.tl-tag{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:.8rem}
+.tl-free{color:var(--sage2)}.tl-pro{color:var(--accent)}
+
+/* Pricing */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:1.5rem}
+.pc-card{background:var(--white);padding:2.5rem}
+.pc-card.pick{background:var(--char);color:var(--white)}
+.pc-tier{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--char3);margin-bottom:1rem}
+.pc-card.pick .pc-tier{color:rgba(255,255,255,.35)}
+.pc-price{font-family:'Noto Serif SC',serif;font-size:3.2rem;font-weight:500;color:var(--char)}
+.pc-card.pick .pc-price{color:var(--white)}
+.pc-price sup{font-size:1.1rem;vertical-align:top;padding-top:.5rem;display:inline-block}
+.pc-period{font-size:.75rem;color:var(--char3);font-weight:300;margin-bottom:1.5rem}
+.pc-card.pick .pc-period{color:rgba(255,255,255,.35)}
+.pc-line{height:1px;background:var(--border);margin:.3rem 0 1.5rem}
+.pc-card.pick .pc-line{background:rgba(255,255,255,.1)}
+.pc-feats{list-style:none}
+.pc-feats li{font-size:.8rem;color:var(--char3);padding:.35rem 0;display:flex;gap:.7rem;font-weight:300;border-bottom:1px solid rgba(0,0,0,.04)}
+.pc-feats li:last-child{border-bottom:none}
+.pc-feats li::before{content:'・';color:var(--sage);flex-shrink:0}
+.pc-card.pick .pc-feats li{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.06)}
+.pc-card.pick .pc-feats li::before{color:rgba(255,255,255,.3)}
+.pc-btn{display:block;text-align:center;margin-top:2rem;padding:.75rem;font-size:.78rem;letter-spacing:.2em;text-decoration:none;transition:.3s;border-radius:100px;border:1px solid var(--border2);color:var(--char3)}
+.pc-btn:hover,.pc-card.pick .pc-btn{background:var(--sage2);color:white;border-color:var(--sage2)}
+.pc-card.pick .pc-btn:hover{background:var(--sage3)}
+
+footer{background:var(--char);color:rgba(250,250,247,.4);padding:3rem 6%;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.f-brand{font-family:'Noto Serif SC',serif;font-size:1.2rem;color:var(--white);font-weight:500;letter-spacing:.05em}
+.f-brand span{color:var(--sage)}
+.f-copy{font-size:.7rem;letter-spacing:.1em}
+
+/* Fade animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.fade-in{animation:fadeIn 1s ease forwards}
+.delay-1{animation-delay:.2s;opacity:0}
+.delay-2{animation-delay:.4s;opacity:0}
+.delay-3{animation-delay:.6s;opacity:0}
+</style>
+</head>
+<body>
+<div class="zen-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-text">SOLO.X</span>
+      <span class="logo-dot"></span>
+    </a>
+    <ul>
+      <li><a href="#">创作</a></li>
+      <li><a href="#">工具</a></li>
+      <li><a href="#">课程</a></li>
+      <li><a href="#">关于</a></li>
+    </ul>
+    <a href="#" class="nav-cta">开启会员</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-kanji">独</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <p class="hero-season fade-in"><span class="season-line"></span>GEO驱动 · 一人公司 · 创作生态</p>
+      <h1 class="hero-title fade-in delay-1">
+        独行者<br>创造的<br>无限可能
+      </h1>
+      <p class="hero-verse fade-in delay-2">文字之间，有光。<br>音乐之中，有意。<br>一人之力，可改变。</p>
+      <div class="hero-btns fade-in delay-3">
+        <a href="#" class="btn-sage">探索内容</a>
+        <a href="#" class="btn-plain">了解会员 →</a>
+      </div>
+    </div>
+    <div class="hero-right fade-in delay-2">
+      <div class="zen-card"><div class="zc-num">240+</div><div class="zc-label">原创内容</div><div class="zc-desc">文章、音乐、视频、小程序与游戏</div></div>
+      <div class="zen-card"><div class="zc-num">18</div><div class="zc-label">专业工具</div><div class="zc-desc">覆盖OPC运营全链路的效率工具</div></div>
+      <div class="zen-card"><div class="zc-num">5K+</div><div class="zc-label">订阅会员</div><div class="zc-desc">同频创作者的共同成长社群</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="ink-div"><span class="ink-sym">竹</span></div>
+
+<div class="section">
+  <p class="sec-season"><span class="season-line"></span>内容创作</p>
+  <h2 class="sec-title">六种形式，一个宇宙</h2>
+  <p class="sec-haiku">每一篇文字，每一段旋律，都是创作者灵魂的真实回响</p>
+  <div class="ct-grid">
+    <div class="ct-item"><span class="ct-index">壹</span><div class="ct-type">Articles</div><div class="ct-name">深度文章</div><div class="ct-desc">商业、技术、创作方法论，86篇原创深度内容</div><div class="ct-foot"><span class="ct-count">86篇</span><span class="ct-price price-paid">部分付费</span></div></div>
+    <div class="ct-item"><span class="ct-index">贰</span><div class="ct-type">Music</div><div class="ct-name">原创音乐</div><div class="ct-desc">32首原创，记录每个创作阶段的声音情绪</div><div class="ct-foot"><span class="ct-count">32首</span><span class="ct-price price-free">全部免费</span></div></div>
+    <div class="ct-item"><span class="ct-index">叁</span><div class="ct-type">Video</div><div class="ct-name">视频课程</div><div class="ct-desc">OPC方法论与AI工具实战的系统化教程</div><div class="ct-foot"><span class="ct-count">24集</span><span class="ct-price price-paid">订阅付费</span></div></div>
+    <div class="ct-item"><span class="ct-index">肆</span><div class="ct-type">Mini App</div><div class="ct-name">微信小程序</div><div class="ct-desc">效率工具与数据看板，独立创作者专用</div><div class="ct-foot"><span class="ct-count">8款</span><span class="ct-price price-paid">按需付费</span></div></div>
+    <div class="ct-item"><span class="ct-index">伍</span><div class="ct-type">Web App</div><div class="ct-name">网页应用</div><div class="ct-desc">AI写作、品牌命名等12款专业Web工具</div><div class="ct-foot"><span class="ct-count">12款</span><span class="ct-price price-paid">Freemium</span></div></div>
+    <div class="ct-item"><span class="ct-index">陆</span><div class="ct-type">Games</div><div class="ct-name">创意游戏</div><div class="ct-desc">轻量网页游戏，在游玩中探索创业与决策</div><div class="ct-foot"><span class="ct-count">6款</span><span class="ct-price price-paid">部分付费</span></div></div>
+  </div>
+</div>
+
+<div class="ink-div"><span class="ink-sym">竹</span></div>
+
+<div class="section">
+  <p class="sec-season"><span class="season-line"></span>OPC工具箱</p>
+  <h2 class="sec-title">效率，是最好的禅</h2>
+  <p class="sec-haiku">18款精选工具，覆盖内容创作与商业运营的全链路</p>
+  <div class="tools-scroll">
+    <div class="tl-item"><div class="tl-name">AI内容生成器</div><div class="tl-desc">结合个人风格的写作助手</div><div class="tl-tag tl-free">免费工具</div></div>
+    <div class="tl-item"><div class="tl-name">定价策略计算</div><div class="tl-desc">数字产品最优定价建议</div><div class="tl-tag tl-free">免费工具</div></div>
+    <div class="tl-item"><div class="tl-name">品牌定位分析</div><div class="tl-desc">个人品牌诊断与优化</div><div class="tl-tag tl-pro">Pro专属</div></div>
+    <div class="tl-item"><div class="tl-name">社媒排期系统</div><div class="tl-desc">多平台内容分发管理</div><div class="tl-tag tl-pro">Pro专属</div></div>
+    <div class="tl-item"><div class="tl-name">收入追踪看板</div><div class="tl-desc">多渠道收入可视化</div><div class="tl-tag tl-pro">Pro专属</div></div>
+    <div class="tl-item"><div class="tl-name">GEO可见度检测</div><div class="tl-desc">AI搜索引擎优化评分</div><div class="tl-tag tl-pro">Pro专属</div></div>
+    <div class="tl-item"><div class="tl-name">选题研究引擎</div><div class="tl-desc">发现高价值内容选题</div><div class="tl-tag tl-free">免费工具</div></div>
+    <div class="tl-item"><div class="tl-name">邮件营销系统</div><div class="tl-desc">轻量邮件列表运营</div><div class="tl-tag tl-pro">Pro专属</div></div>
+  </div>
+</div>
+
+<div class="ink-div"><span class="ink-sym">竹</span></div>
+
+<div class="section">
+  <p class="sec-season"><span class="season-line"></span>会员计划</p>
+  <h2 class="sec-title">选择你的创作境界</h2>
+  <div class="price-grid">
+    <div class="pc-card">
+      <div class="pc-tier">探索者</div>
+      <div class="pc-price"><sup>¥</sup>0</div>
+      <div class="pc-period">永久免费</div>
+      <div class="pc-line"></div>
+      <ul class="pc-feats">
+        <li>免费内容无限阅读</li>
+        <li>基础工具6款</li>
+        <li>每月3篇付费内容</li>
+        <li>广告支持版本</li>
+      </ul>
+      <a href="#" class="pc-btn">免费开始</a>
+    </div>
+    <div class="pc-card pick">
+      <div class="pc-tier">创作者</div>
+      <div class="pc-price"><sup>¥</sup>68</div>
+      <div class="pc-period">/ 月 · 按月订阅</div>
+      <div class="pc-line"></div>
+      <ul class="pc-feats">
+        <li>全部内容无限访问</li>
+        <li>18款Pro工具全解锁</li>
+        <li>视频课程完整访问</li>
+        <li>全部小程序与Web App</li>
+        <li>无广告纯净体验</li>
+        <li>创作者专属社群</li>
+      </ul>
+      <a href="#" class="pc-btn">开启创作者</a>
+    </div>
+    <div class="pc-card">
+      <div class="pc-tier">年度会员</div>
+      <div class="pc-price"><sup>¥</sup>580</div>
+      <div class="pc-period">/ 年 · 节省28%</div>
+      <div class="pc-line"></div>
+      <ul class="pc-feats">
+        <li>创作者全部权益</li>
+        <li>年度独家研究报告</li>
+        <li>1v1问答机会</li>
+        <li>新功能优先体验</li>
+        <li>专属年度徽章</li>
+      </ul>
+      <a href="#" class="pc-btn">选择年度</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-brand">SOLO<span>.X</span></div>
+  <div class="f-copy">© 2025 SOLO.X · 一人公司创作平台 · 道法自然</div>
+</footer>
+</body>
+</html>
