@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { Noto_Serif_SC, Noto_Sans_SC } from 'next/font/google';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
 import './globals.css';
 
 const notoSerif = Noto_Serif_SC({
@@ -51,9 +49,7 @@ export default function RootLayout({
     <html lang="zh-CN" className={`${notoSerif.variable} ${notoSans.variable}`}>
       <body>
         <div className="zen-bg" />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

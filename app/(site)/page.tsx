@@ -1,6 +1,25 @@
 import { InkDivider } from '@/components/ink-divider';
 import { ZenCard } from '@/components/zen-card';
 import { SubscribeForm } from '@/components/subscribe-form';
+import { isFeatureEnabled, type FeatureKey } from '@/lib/features';
+
+const CONTENT_ITEMS: {
+  key: FeatureKey;
+  index: string;
+  type: string;
+  name: string;
+  desc: string;
+  count: string;
+  priceClass: string;
+  priceLabel: string;
+}[] = [
+  { key: 'ARTICLES', index: '壹', type: 'Articles', name: '深度文章', desc: '商业、技术、创作方法论，86篇原创深度内容', count: '86篇', priceClass: 'price-paid', priceLabel: '部分付费' },
+  { key: 'MUSIC', index: '贰', type: 'Music', name: '原创音乐', desc: '32首原创，记录每个创作阶段的声音情绪', count: '32首', priceClass: 'price-free', priceLabel: '全部免费' },
+  { key: 'COURSES', index: '叁', type: 'Video', name: '视频课程', desc: 'OPC方法论与AI工具实战的系统化教程', count: '24集', priceClass: 'price-paid', priceLabel: '订阅付费' },
+  { key: 'APPS', index: '肆', type: 'Mini App', name: '微信小程序', desc: '效率工具与数据看板，独立创作者专用', count: '8款', priceClass: 'price-paid', priceLabel: '按需付费' },
+  { key: 'WEBAPPS', index: '伍', type: 'Web App', name: '网页应用', desc: 'AI写作、品牌命名等12款专业Web工具', count: '12款', priceClass: 'price-paid', priceLabel: 'Freemium' },
+  { key: 'GAMES', index: '陆', type: 'Games', name: '创意游戏', desc: '轻量网页游戏，在游玩中探索创业与决策', count: '6款', priceClass: 'price-paid', priceLabel: '部分付费' },
+];
 
 export default function Home() {
   return (
@@ -41,66 +60,23 @@ export default function Home() {
         <h2 className="sec-title">六种形式，一个宇宙</h2>
         <p className="sec-haiku">每一篇文字，每一段旋律，都是创作者灵魂的真实回响</p>
         <div className="ct-grid">
-          <div className="ct-item">
-            <span className="ct-index">壹</span>
-            <div className="ct-type">Articles</div>
-            <div className="ct-name">深度文章</div>
-            <div className="ct-desc">商业、技术、创作方法论，86篇原创深度内容</div>
-            <div className="ct-foot">
-              <span className="ct-count">86篇</span>
-              <span className="ct-price price-paid">部分付费</span>
-            </div>
-          </div>
-          <div className="ct-item">
-            <span className="ct-index">贰</span>
-            <div className="ct-type">Music</div>
-            <div className="ct-name">原创音乐</div>
-            <div className="ct-desc">32首原创，记录每个创作阶段的声音情绪</div>
-            <div className="ct-foot">
-              <span className="ct-count">32首</span>
-              <span className="ct-price price-free">全部免费</span>
-            </div>
-          </div>
-          <div className="ct-item">
-            <span className="ct-index">叁</span>
-            <div className="ct-type">Video</div>
-            <div className="ct-name">视频课程</div>
-            <div className="ct-desc">OPC方法论与AI工具实战的系统化教程</div>
-            <div className="ct-foot">
-              <span className="ct-count">24集</span>
-              <span className="ct-price price-paid">订阅付费</span>
-            </div>
-          </div>
-          <div className="ct-item">
-            <span className="ct-index">肆</span>
-            <div className="ct-type">Mini App</div>
-            <div className="ct-name">微信小程序</div>
-            <div className="ct-desc">效率工具与数据看板，独立创作者专用</div>
-            <div className="ct-foot">
-              <span className="ct-count">8款</span>
-              <span className="ct-price price-paid">按需付费</span>
-            </div>
-          </div>
-          <div className="ct-item">
-            <span className="ct-index">伍</span>
-            <div className="ct-type">Web App</div>
-            <div className="ct-name">网页应用</div>
-            <div className="ct-desc">AI写作、品牌命名等12款专业Web工具</div>
-            <div className="ct-foot">
-              <span className="ct-count">12款</span>
-              <span className="ct-price price-paid">Freemium</span>
-            </div>
-          </div>
-          <div className="ct-item">
-            <span className="ct-index">陆</span>
-            <div className="ct-type">Games</div>
-            <div className="ct-name">创意游戏</div>
-            <div className="ct-desc">轻量网页游戏，在游玩中探索创业与决策</div>
-            <div className="ct-foot">
-              <span className="ct-count">6款</span>
-              <span className="ct-price price-paid">部分付费</span>
-            </div>
-          </div>
+          {CONTENT_ITEMS.map((item) => {
+            const enabled = isFeatureEnabled(item.key);
+            return (
+              <div key={item.key} className="ct-item" style={!enabled ? { opacity: 0.5 } : undefined}>
+                <span className="ct-index">{item.index}</span>
+                <div className="ct-type">{item.type}</div>
+                <div className="ct-name">{item.name}</div>
+                <div className="ct-desc">{item.desc}</div>
+                <div className="ct-foot">
+                  <span className="ct-count">{item.count}</span>
+                  <span className={`ct-price ${item.priceClass}`}>
+                    {enabled ? item.priceLabel : '即将推出'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
