@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Noto_Serif_SC, Noto_Sans_SC } from 'next/font/google';
+import { Noto_Serif_SC, Noto_Sans_SC, Shippori_Mincho } from 'next/font/google';
 import './globals.css';
 
 const notoSerif = Noto_Serif_SC({
@@ -18,12 +18,19 @@ const notoSans = Noto_Sans_SC({
   preload: true,
 });
 
+const shipporiMincho = Shippori_Mincho({
+  weight: ['400', '500'],
+  subsets: ['latin'],
+  variable: '--font-mincho',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: {
     default: 'SOLO.X — 一人公司创作平台',
     template: '%s | SOLO.X',
   },
-  description: '独立创作者的内容平台，汇聚文章、工具、课程与灵感',
+  description: 'SOLO.X 是中文世界的一人公司创作平台，用一个人的力量，构建六种内容形式，打造一个完整的商业生态。',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://solo-x.vercel.app'),
   openGraph: {
     type: 'website',
@@ -46,9 +53,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${notoSerif.variable} ${notoSans.variable}`}>
+    <html lang="zh-CN" className={`${notoSerif.variable} ${notoSans.variable} ${shipporiMincho.variable}`}>
       <body>
-        <div className="zen-bg" />
+        <div className="zen-bg" aria-hidden="true" />
         {children}
       </body>
     </html>

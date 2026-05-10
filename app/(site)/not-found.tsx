@@ -1,12 +1,23 @@
+import { PageHead } from '@/components/page-head';
+
 export default function NotFound() {
   return (
-    <div className="error-page">
-      <div className="error-content">
-        <h1 className="error-title">肆零肆</h1>
-        <p className="error-message">你访问的页面不存在</p>
-        <p className="error-hint">可能已被移动、重命名，或从未存在</p>
-        <a href="/" className="error-link">返回首页</a>
-      </div>
-    </div>
+    <>
+      <PageHead
+        kicker="404"
+        title="页面未找到。"
+        desc="你访问的页面可能已被移动、重命名，或从未存在。请检查链接，或返回已知的页面。"
+        kanji="空"
+      />
+
+      <section className="section">
+        <div className="container">
+          <div className="button-row">
+            <a href="/" className="btn-sage">返回首页</a>
+            <a href="/map" className="btn-plain">查看导航页</a>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

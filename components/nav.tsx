@@ -1,28 +1,44 @@
-import { NAV_LINKS } from '@/lib/constants';
-import { isFeatureEnabled } from '@/lib/features';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const navItems = [
+  { href: '/articles', label: '文章' },
+  { href: '/music', label: '音乐' },
+  { href: '/courses', label: '课程' },
+  { href: '/apps', label: '小程序' },
+  { href: '/webapps', label: '网页应用' },
+  { href: '/games', label: '游戏' },
+  { href: '/tools', label: '工具箱' },
+  { href: '/pricing', label: '会员' },
+  { href: '/about', label: '关于' },
+];
 
 export function Nav() {
-  const visibleLinks = NAV_LINKS.filter(
-    (link) => !link.feature || isFeatureEnabled(link.feature as Parameters<typeof isFeatureEnabled>[0])
-  );
+  const pathname = usePathname();
 
   return (
-    <nav>
+    <nav className="site-nav" aria-label="主导航">
       <div className="nav-inner">
-        <a href="/" className="logo">
-          <span className="logo-text">SOLO.X</span>
-          <span className="logo-dot" />
-        </a>
-        <ul>
-          {visibleLinks.map((link) => (
-            <li key={link.href}>
-              <a href={link.href}>{link.label}</a>
-            </li>
+        <Link className="logo" href="/">
+          SOLO<mark>.X</mark><span className="logo-dot" />
+        </Link>
+        <div className="nav-links">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={pathname === item.href || pathname.startsWith(item.href + '/') ? 'active' : ''}
+            >
+              {item.label}
+            </Link>
           ))}
-        </ul>
-        <button className="nav-toggle" aria-label="菜单">
-          <span /><span /><span />
-        </button>
+        </div>
+        <div className="nav-actions">
+          <Link className="nav-map" href="/map">站点地图</Link>
+          <Link className="nav-cta" href="/opcx">进入 OPC</Link>
+        </div>
       </div>
     </nav>
   );
