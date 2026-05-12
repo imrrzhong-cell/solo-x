@@ -1,6 +1,7 @@
 import { sql } from "@/lib/aihot/db";
 import type { ScoredItem } from "@/lib/aihot/types";
 import { ContentCard } from "@/components/aihot/content-card";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 300;
 
@@ -67,8 +68,19 @@ export default async function FavoritesPage({
 }) {
   const params = await searchParams;
   const tag = params.tag;
-  const items = await getFavorites(tag);
-  const tags = await getFavoriteTags();
+
+  let items: ScoredItem[] = [];
+  let tags: string[] = [];
+  let dbAvailable = true;
+  try {
+    [items, tags] = await Promise.all([getFavorites(tag), getFavoriteTags()]);
+  } catch {
+    dbAvailable = false;
+  }
+
+  if (!dbAvailable) {
+    return <DbUnavailable />;
+  }
 
   return (
     <>

@@ -1,16 +1,17 @@
 import { sql } from "@/lib/aihot/db";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 600;
 
 async function getOverviewStats() {
-  const rows = await sql`
+  const rows = (await sql`
     SELECT
       (SELECT COUNT(*) FROM contents WHERE fetched_at >= NOW() - INTERVAL '24 hours') as contents_today,
       (SELECT COUNT(*) FROM scored_contents WHERE scored_at >= NOW() - INTERVAL '24 hours') as scored_today,
       (SELECT COUNT(*) FROM scored_contents WHERE is_featured = true) as featured_total,
       (SELECT COUNT(*) FROM sources WHERE active = true) as sources_active,
       (SELECT COUNT(*) FROM favorites) as favorites_total
-  `;
+  `) as any[];
   return rows[0] as Record<string, number>;
 }
 
@@ -50,12 +51,37 @@ async function getTopKeywords(days = 7) {
 }
 
 export default async function StatsPage() {
-  const [overview, categories, sourceHealth, keywords] = await Promise.all([
-    getOverviewStats(),
-    getCategoryStats(),
-    getSourceHealth(),
-    getTopKeywords(),
-  ]);
+  let overview: Record<string, number> | null = null;
+  let categories: Record<string, unknown>[] = [];
+  let sourceHealth: Record<string, unknown>[] = [];
+  let keywords: Record<string, unknown>[] = [];
+  let dbAvailable = true;
+  try {
+    [overview, categories, sourceHealth, keywords] = await Promise.all([
+      getOverviewStats(),
+      getCategoryStats(),
+      getSourceHealth(),
+      getTopKeywords(),
+    ]);
+  } catch {
+    dbAvailable = false;
+  }
+
+  if (!dbAvailable || !overview) {
+    return (
+      <>
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", fontWeight: 500, color: "var(--char)" }}>
+            数据统计
+          </h2>
+          <p style={{ fontSize: ".82rem", color: "var(--char3)", marginTop: ".3rem" }}>
+            系统运行指标与趋势分析
+          </p>
+        </div>
+        <DbUnavailable />
+      </>
+    );
+  }
 
   const stats = [
     {

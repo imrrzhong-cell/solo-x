@@ -1,11 +1,18 @@
 import { neon } from "@neondatabase/serverless";
 
-export function getSql() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL environment variable is not set");
+let _sql: ReturnType<typeof neon> | null = null;
+
+function getSql() {
+  if (!_sql && process.env.DATABASE_URL) {
+    _sql = neon(process.env.DATABASE_URL);
   }
-  return neon(process.env.DATABASE_URL);
+  return _sql;
 }
 
-// Export sql directly for backward compatibility
-export const sql = getSql();
+export const sql = ((strings: TemplateStringsArray, ...values: unknown[]) => {
+  const s = getSql();
+  if (!s) {
+    throw new Error("DATABASE_URL is not configured");
+  }
+  return s(strings, ...values);
+}) as ReturnType<typeof neon>;

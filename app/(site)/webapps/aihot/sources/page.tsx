@@ -1,5 +1,6 @@
 import { sql } from "@/lib/aihot/db";
 import type { Source } from "@/lib/aihot/types";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 600;
 
@@ -47,7 +48,17 @@ function formatLastFetched(dateStr: string | null): string {
 }
 
 export default async function SourcesPage() {
-  const sources = await getSources();
+  let sources: Source[] = [];
+  let dbAvailable = true;
+  try {
+    sources = await getSources();
+  } catch {
+    dbAvailable = false;
+  }
+
+  if (!dbAvailable) {
+    return <DbUnavailable />;
+  }
 
   return (
     <>

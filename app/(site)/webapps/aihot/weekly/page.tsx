@@ -2,14 +2,14 @@ import { sql } from "@/lib/aihot/db";
 import type { WeeklyReport, ReportItem } from "@/lib/aihot/types";
 import { ScoreCircle } from "@/components/aihot/score-circle";
 import { CATEGORIES } from "@/lib/aihot/constants";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 3600;
 
 async function getWeeklyReport(
   mondayDate: string
 ): Promise<WeeklyReport | null> {
-  const rows =
-    await sql`SELECT * FROM reports WHERE report_type = 'weekly' AND report_date = ${mondayDate} LIMIT 1`;
+  const rows = (await sql`SELECT * FROM reports WHERE report_type = 'weekly' AND report_date = ${mondayDate} LIMIT 1`) as any[];
   return (rows[0] as unknown as WeeklyReport) || null;
 }
 
@@ -42,8 +42,19 @@ export default async function WeeklyPage({
   const today = new Date();
   const currentMonday = getWeekStart(today);
   const targetDate = params.date || currentMonday;
-  const report = await getWeeklyReport(targetDate);
   const recentMondays = getRecentMondays();
+
+  let report: WeeklyReport | null = null;
+  let dbAvailable = true;
+  try {
+    report = await getWeeklyReport(targetDate);
+  } catch {
+    dbAvailable = false;
+  }
+
+  if (!dbAvailable) {
+    return <DbUnavailable />;
+  }
 
   if (!report) {
     return (

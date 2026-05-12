@@ -2,14 +2,14 @@ import { sql } from "@/lib/aihot/db";
 import type { DailyReport, ReportItem } from "@/lib/aihot/types";
 import { ScoreCircle } from "@/components/aihot/score-circle";
 import { CATEGORIES } from "@/lib/aihot/constants";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 3600;
 
 async function getDailyReport(
   date: string
 ): Promise<DailyReport | null> {
-  const rows =
-    await sql`SELECT * FROM reports WHERE report_type = 'daily' AND report_date = ${date} LIMIT 1`;
+  const rows = (await sql`SELECT * FROM reports WHERE report_type = 'daily' AND report_date = ${date} LIMIT 1`) as any[];
   return (rows[0] as unknown as DailyReport) || null;
 }
 
@@ -31,8 +31,19 @@ export default async function DailyPage({
   const params = await searchParams;
   const today = new Date();
   const targetDate = params.date || today.toISOString().split("T")[0];
-  const report = await getDailyReport(targetDate);
   const weekDates = getWeekDates(new Date(targetDate));
+
+  let report: DailyReport | null = null;
+  let dbAvailable = true;
+  try {
+    report = await getDailyReport(targetDate);
+  } catch {
+    dbAvailable = false;
+  }
+
+  if (!dbAvailable) {
+    return <DbUnavailable />;
+  }
 
   if (!report) {
     return (

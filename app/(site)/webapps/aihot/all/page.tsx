@@ -2,6 +2,7 @@ import { sql } from "@/lib/aihot/db";
 import type { ScoredItem } from "@/lib/aihot/types";
 import { ContentCard } from "@/components/aihot/content-card";
 import { CATEGORIES } from "@/lib/aihot/constants";
+import { DbUnavailable } from "@/components/aihot/db-unavailable";
 
 export const revalidate = 300;
 
@@ -61,7 +62,14 @@ export default async function AllPage({
   const search = params.search || "";
   const category = params.category as ScoredItem["category"] | undefined;
   const page = parseInt(params.page || "1");
-  const items = await getAllItems(search, category, page);
+
+  let items: ScoredItem[] = [];
+  let dbAvailable = true;
+  try {
+    items = await getAllItems(search, category, page);
+  } catch {
+    dbAvailable = false;
+  }
 
   return (
     <>
@@ -83,65 +91,82 @@ export default async function AllPage({
         </p>
       </div>
 
-      <form method="GET" style={{ marginBottom: "1.5rem" }}>
-        <input
-          name="search"
-          placeholder="搜索标题或摘要..."
-          defaultValue={search}
-          style={{
-            width: "100%",
-            background: "var(--white)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius-card)",
-            padding: ".7rem 1rem",
-            fontSize: ".82rem",
-            color: "var(--char2)",
-          }}
-        />
-      </form>
+      {!dbAvailable ? (
+        <DbUnavailable />
+      ) : (
+        <>
+          <form method="GET" style={{ marginBottom: "1.5rem" }}>
+            <input
+              name="search"
+              placeholder="搜索标题或摘要..."
+              defaultValue={search}
+              style={{
+                width: "100%",
+                background: "var(--white)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-card)",
+                padding: ".7rem 1rem",
+                fontSize: ".82rem",
+                color: "var(--char2)",
+              }}
+            />
+          </form>
 
-      <div className="aihot-filters" style={{ marginBottom: "1.5rem" }}>
-        <a
-          href="/webapps/aihot/all"
-          className={`aihot-filter-btn ${!category ? "active" : ""}`}
-        >
-          全部
-        </a>
-        {CATEGORIES.map((cat) => (
-          <a
-            key={cat.key}
-            href={`/webapps/aihot/all?category=${cat.key}`}
-            className={`aihot-filter-btn ${category === cat.key ? "active" : ""}`}
-          >
-            {cat.label}
-          </a>
-        ))}
-      </div>
+          <div className="aihot-filters" style={{ marginBottom: "1.5rem" }}>
+            <a
+              href="/webapps/aihot/all"
+              className={`aihot-filter-btn ${!category ? "active" : ""}`}
+            >
+              全部
+            </a>
+            {CATEGORIES.map((cat) => (
+              <a
+                key={cat.key}
+                href={`/webapps/aihot/all?category=${cat.key}`}
+                className={`aihot-filter-btn ${category === cat.key ? "active" : ""}`}
+              >
+                {cat.label}
+              </a>
+            ))}
+          </div>
 
-      <div className="aihot-grid-2">
-        {items.map((item) => (
-          <ContentCard key={item.id} item={item} />
-        ))}
-      </div>
+          <div className="aihot-grid-2">
+            {items.map((item) => (
+              <ContentCard key={item.id} item={item} />
+            ))}
+          </div>
 
-      {items.length === 20 && (
-        <div style={{ textAlign: "center", marginTop: "2rem" }}>
-          <a
-            href={`/webapps/aihot/all?page=${page + 1}${search ? `&search=${encodeURIComponent(search)}` : ""}${category ? `&category=${category}` : ""}`}
-            style={{
-              display: "inline-block",
-              background: "var(--sage2)",
-              color: "var(--white)",
-              padding: ".6rem 1.8rem",
-              borderRadius: "var(--radius-pill)",
-              fontSize: ".78rem",
-              letterSpacing: ".1em",
-              textDecoration: "none",
-            }}
-          >
-            加载更多
-          </a>
-        </div>
+          {items.length === 0 && (
+            <div style={{ textAlign: "center", padding: "4rem 0" }}>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", color: "var(--char3)" }}>
+                暂无内容
+              </p>
+              <p style={{ fontSize: ".82rem", color: "var(--char3)", marginTop: ".5rem" }}>
+                数据流水线启动后将自动填充
+              </p>
+            </div>
+          )}
+
+          {items.length === 20 && (
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+              <a
+                href={`/webapps/aihot/all?page=${page + 1}${search ? `&search=${encodeURIComponent(search)}` : ""}${category ? `&category=${category}` : ""}`}
+                style={{
+                  display: "inline-block",
+                  background: "var(--sage2)",
+                  color: "var(--white)",
+                  padding: ".6rem 1.8rem",
+                  borderRadius: "var(--radius-pill)",
+                  fontSize: ".78rem",
+                  letterSpacing: ".1em",
+                  textDecoration: "none",
+                }}
+              >
+                加载更多
+              </a>
+            </div>
+          )}
+        </>
       )}
     </>
   );
