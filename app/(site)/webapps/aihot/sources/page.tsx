@@ -6,7 +6,7 @@ export const revalidate = 600;
 async function getSources(): Promise<Source[]> {
   const rows = await sql`
     SELECT id, name, url, feed_type, tier, category, active,
-           fetch_interval_minutes, last_fetched_at, success_count, fail_count
+           fetch_interval_minutes, last_fetched_at, success_count, fail_count, created_at
     FROM sources
     ORDER BY tier ASC, name ASC
   `;
@@ -15,14 +15,15 @@ async function getSources(): Promise<Source[]> {
     id: r.id as number,
     name: r.name as string,
     url: r.url as string,
-    feed_type: r.feed_type as "rss" | "html";
-    tier: r.tier as "T1" | "T2";
-    category: r.category as string;
-    active: r.active as boolean;
-    fetch_interval_minutes: r.fetch_interval_minutes as number;
-    last_fetched_at: r.last_fetched_at as string | null;
-    success_count: r.success_count as number;
-    fail_count: r.fail_count as number;
+    feed_type: r.feed_type as "rss" | "html",
+    tier: r.tier as "T1" | "T2",
+    category: r.category as string,
+    active: r.active as boolean,
+    fetch_interval_minutes: r.fetch_interval_minutes as number,
+    last_fetched_at: r.last_fetched_at as string | null,
+    success_count: r.success_count as number,
+    fail_count: r.fail_count as number,
+    created_at: r.created_at as string,
   }));
 }
 
