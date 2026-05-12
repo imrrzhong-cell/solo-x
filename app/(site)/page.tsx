@@ -58,6 +58,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── AIHOT 新功能公告 ── */}
+      <section style={{ background: 'linear-gradient(135deg, var(--sage4) 0%, var(--sage3) 100%)', padding: '2.5rem 0' }}>
+        <div className="container">
+          <Link href="/webapps/aihot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', background: 'var(--sage2)', color: 'var(--white)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-pill)' }}>NEW</span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--char3)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>网页应用</span>
+              </div>
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 500, color: 'var(--char)', margin: 0 }}>MyAIHOT · AI 热点雷达上线</h2>
+              <p style={{ fontSize: '0.82rem', color: 'var(--char2)', margin: '0.3rem 0 0 0', lineHeight: 1.6 }}>
+                每日自动抓取 27 个顶级 AI 信源，智能评分筛选，生成日报和周报。覆盖 OpenAI、Anthropic、DeepMind、ArXiv、量子位等核心源。
+              </p>
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--sage2)', letterSpacing: '0.1em', whiteSpace: 'nowrap' }}>立即体验 →</div>
+          </Link>
+        </div>
+      </section>
+
       <InkDivider sym="竹" />
 
       {/* ── 六种内容形式 ── */}
