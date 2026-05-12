@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SOLO.X | 一人公司创作平台</title>
+  <meta name="description" content="SOLO.X 是中文世界的一人公司创作平台，用一个人的力量，构建六种内容形式，打造一个完整的商业生态。" />
+  <meta property="og:title" content="SOLO.X | 一人公司创作平台" />
+  <meta property="og:description" content="文章、音乐、课程、应用、游戏、工具，一人公司的完整创作生态。" />
+  <meta name="theme-color" content="#fafaf7" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --white:#fafaf7; --off:#f2f0ea; --warm:#e8e4d9; --warm2:#d8d2c2;
+      --char:#1e1e1e; --char2:#3a3a3a; --char3:#666666;
+      --sage:#7d9b76; --sage2:#5a7a54; --sage3:#3d5939;
+      --border:rgba(30,30,30,.10); --border2:rgba(30,30,30,.18);
+      --accent:#c4842a; --accent-light:#f0d4a0;
+      --font-serif:'Noto Serif SC', serif; --font-sans:'Noto Sans SC', sans-serif; --font-mincho:'Shippori Mincho', serif;
+      --radius-card:4px; --radius-pill:100px; --max-width:1100px; --page-padding:6%;
+      --ease-fast:.2s ease; --ease:.3s ease; --ease-slow:.8s ease;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--white);color:var(--char);font-family:var(--font-sans);font-weight:300;line-height:1.8;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit;color:inherit}
+    button{cursor:pointer;background:none;border:0}
+    ::selection{background:var(--warm);color:var(--char)}
+    .zen-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:repeating-linear-gradient(90deg,var(--char) 0px,var(--char) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,var(--char) 0px,var(--char) 1px,transparent 1px,transparent 60px)}
+    .site-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,250,247,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .nav-inner{max-width:var(--max-width);margin:0 auto;padding:.62rem var(--page-padding);display:grid;grid-template-columns:auto 1fr auto;gap:2rem;align-items:center}
+    .logo{font-family:var(--font-serif);font-weight:500;font-size:1.3rem;letter-spacing:.02em;color:var(--char);display:flex;align-items:flex-start;gap:.36rem;white-space:nowrap}
+    .logo-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-top:.45rem;display:inline-block}
+    .logo mark{background:transparent;color:var(--sage2);padding:0}
+    .nav-links{display:flex;align-items:center;gap:1.35rem;justify-content:center;min-width:0}
+    .nav-links a{font-size:.8rem;letter-spacing:.1em;color:var(--char3);font-weight:400;transition:var(--ease-fast);white-space:nowrap}
+    .nav-links a:hover,.nav-links a.active{color:var(--sage2)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .nav-cta{background:var(--sage2);color:var(--white);border-radius:var(--radius-pill);padding:.42rem 1.1rem;font-size:.78rem;letter-spacing:.12em;font-weight:400;transition:var(--ease-fast);white-space:nowrap}
+    .nav-cta:hover{background:var(--sage3);transform:translateY(-1px)}
+    .nav-map{border:1px solid var(--border2);border-radius:var(--radius-pill);padding:.34rem .82rem;color:var(--char3);font-size:.72rem;letter-spacing:.1em;font-weight:400;white-space:nowrap;transition:var(--ease-fast)}
+    .nav-map:hover{color:var(--sage2);border-color:var(--sage)}
+    #app{position:relative;z-index:1;min-height:calc(100vh - 160px)}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 var(--page-padding)}
+    section,.page{position:relative;z-index:1}
+    .hero{padding:7rem 0 5rem;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+    .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%}
+    .hero-copy{position:relative;z-index:2}
+    .eyebrow,.sec-season{display:flex;align-items:center;gap:1rem;font-size:.65rem;letter-spacing:.4em;color:var(--sage);font-weight:400;text-transform:uppercase;margin-bottom:2rem;line-height:1}
+    .eyebrow:before,.sec-season:before{content:'';width:30px;height:1px;background:var(--sage);display:block;flex:0 0 auto}
+    .hero-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.3;letter-spacing:.02em;margin:0 0 1.5rem;color:var(--char)}
+    .hero-quote{font-family:var(--font-serif);font-weight:300;font-style:italic;font-size:1rem;line-height:2;color:var(--char3);border-left:2px solid var(--sage);padding-left:1.2rem;margin:0 0 2.5rem;max-width:520px}
+    .button-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+    .btn-sage{display:inline-flex;align-items:center;justify-content:center;background:var(--sage2);color:var(--white);padding:.75rem 2rem;border-radius:var(--radius-pill);font-size:.82rem;letter-spacing:.1em;font-weight:400;transition:var(--ease-fast)}
+    .btn-sage:hover{background:var(--sage3);transform:translateY(-1px)}
+    .btn-plain{display:inline-flex;align-items:center;gap:.35rem;color:var(--char2);border-bottom:1px solid var(--border2);font-size:.82rem;letter-spacing:.08em;font-weight:400;transition:var(--ease-fast);padding-bottom:.12rem}
+    .btn-plain:hover{color:var(--sage2);border-color:var(--sage2)}
+    .hero-kanji{font-family:var(--font-serif);font-size:13rem;line-height:1;color:rgba(125,155,118,.08);position:absolute;right:-2.5rem;top:50%;transform:translateY(-50%);pointer-events:none;user-select:none;letter-spacing:-.08em}
+    .stat-stack{display:grid;gap:1rem;position:relative;z-index:2}
+    .zen-card{background:var(--off);border:1px solid var(--border);border-radius:var(--radius-card);padding:1.8rem;transition:var(--ease)}
+    .zen-card:hover{background:var(--warm);border-color:var(--border2)}
+    .stat-num{font-family:var(--font-mincho);font-weight:500;font-size:2rem;line-height:1;color:var(--sage3);margin-bottom:.3rem}
+    .stat-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--char3);font-weight:400;line-height:1.3}
+    .stat-desc{font-size:.78rem;color:var(--char3);line-height:1.7;margin-top:.4rem}
+    .fade-in{animation:fadeIn 1s ease forwards}.delay-1{opacity:0;animation-delay:.2s}.delay-2{opacity:0;animation-delay:.4s}.delay-3{opacity:0;animation-delay:.6s}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .ink-div{display:flex;align-items:center;gap:1.5rem;max-width:var(--max-width);margin:0 auto;padding:0 var(--page-padding)}
+    .ink-div:before,.ink-div:after{content:'';flex:1;height:1px;background:var(--border)}
+    .ink-sym{color:var(--sage);font-size:.9rem;font-family:var(--font-serif)}
+    .section{padding:4rem 0}
+    .section.alt{background:var(--off);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .section-header{margin-bottom:2rem;max-width:700px}
+    .sec-title{font-family:var(--font-serif);font-weight:500;font-size:1.8rem;line-height:1.3;letter-spacing:.02em;color:var(--char);margin:0 0 .6rem}
+    .sec-haiku{font-family:var(--font-serif);font-weight:300;font-style:italic;font-size:.88rem;color:var(--char3);line-height:1.8;margin:0}
+    .content-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+    .ct-item{background:var(--white);padding:2rem;transition:var(--ease);min-height:260px;display:flex;flex-direction:column}
+    .ct-item:hover{background:var(--off)}
+    .ct-index{font-family:var(--font-mincho);font-weight:500;font-size:1.5rem;color:var(--warm2);display:block;margin-bottom:1rem;line-height:1}
+    .ct-type{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage);margin-bottom:.5rem;font-weight:300;line-height:1.2}
+    .ct-name{font-family:var(--font-serif);font-weight:500;font-size:1.1rem;color:var(--char);letter-spacing:.02em;margin:0 0 .5rem;line-height:1.45}
+    .ct-desc{font-size:.78rem;line-height:1.8;color:var(--char3);margin:0;flex:1}
+    .ct-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:.8rem;border-top:1px solid var(--border);gap:1rem}
+    .ct-count{font-size:.7rem;color:var(--char3)}
+    .ct-price{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;font-weight:400;white-space:nowrap}.price-free{color:var(--sage2)}.price-paid{color:var(--accent)}
+    .tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+    .tl-item{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-card);padding:1.3rem;transition:var(--ease);min-height:172px;display:flex;flex-direction:column}
+    .tl-item:hover{background:var(--off);border-color:var(--border2)}
+    .tl-name{font-family:var(--font-serif);font-weight:500;font-size:.95rem;color:var(--char);margin:0 0 .3rem;line-height:1.35}
+    .tl-desc{font-size:.73rem;color:var(--char3);line-height:1.7;margin:0;flex:1}
+    .tl-meta{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;margin-top:.8rem;font-weight:400}.tl-free{color:var(--sage2)}.tl-pro{color:var(--accent)}
+    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+    .pc-card{background:var(--white);padding:2.5rem}.pc-card.pick{background:var(--char);color:var(--white)}
+    .pc-tier{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--char3);font-weight:400}.pick .pc-tier{color:rgba(250,250,247,.35)}
+    .pc-price{font-family:var(--font-serif);font-weight:500;font-size:3.2rem;line-height:1.1;color:var(--char);margin:.9rem 0 .15rem}.pick .pc-price{color:var(--white)}.pc-price sup{font-size:1.1rem;vertical-align:top;margin-right:.12rem}
+    .pc-period{font-size:.75rem;color:var(--char3);margin-bottom:1.5rem}.pick .pc-period{color:rgba(250,250,247,.35)}
+    .pc-line{height:1px;background:var(--border);margin:.3rem 0 1.5rem}.pick .pc-line{background:rgba(250,250,247,.1)}
+    .pc-feats{list-style:none;padding:0;margin:0;font-size:.8rem;color:var(--char3)}.pick .pc-feats{color:rgba(250,250,247,.62)}
+    .pc-feats li{padding:.35rem 0;border-bottom:1px solid var(--border);display:flex;gap:.45rem}.pick .pc-feats li{border-color:rgba(250,250,247,.06)}
+    .pc-feats li:before{content:'・';color:var(--sage);flex:0 0 auto}.pick .pc-feats li:before{color:rgba(250,250,247,.3)}
+    .pc-btn{display:block;text-align:center;margin-top:2rem;padding:.75rem;border-radius:var(--radius-pill);border:1px solid var(--border2);font-size:.78rem;letter-spacing:.2em;text-decoration:none;transition:var(--ease);font-weight:400;color:var(--char3)}
+    .pc-btn:hover,.pick .pc-btn{background:var(--sage2);color:var(--white);border-color:var(--sage2)}.pick .pc-btn:hover{background:var(--sage3)}
+    .page-head{padding:8rem 0 3rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .page-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(2rem,4vw,3.4rem);line-height:1.25;letter-spacing:.02em;margin:0 0 1rem;max-width:780px}
+    .page-desc{font-size:.9rem;color:var(--char3);line-height:1.9;max-width:660px;margin:0}.page-kanji{font-family:var(--font-serif);font-size:11rem;line-height:1;color:rgba(125,155,118,.07);position:absolute;right:6%;top:50%;transform:translateY(-42%);pointer-events:none}
+    .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}.tab{border:1px solid var(--border);background:var(--white);color:var(--char3);border-radius:var(--radius-pill);padding:.44rem .92rem;font-size:.7rem;letter-spacing:.12em;font-weight:400;transition:var(--ease-fast)}.tab:hover,.tab.active{border-color:var(--sage);color:var(--sage2);background:var(--off)}
+    .article-list{display:grid;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .article-card{display:grid;grid-template-columns:1fr auto;gap:2rem;background:var(--white);padding:2rem;transition:var(--ease)}.article-card:hover{background:var(--off)}
+    .article-meta{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);font-weight:400;margin-bottom:.55rem}.article-title{font-family:var(--font-serif);font-weight:500;font-size:1.25rem;line-height:1.45;margin:0 0 .5rem}.article-excerpt{font-size:.8rem;color:var(--char3);max-width:620px;margin:0;line-height:1.85}.article-side{text-align:right;color:var(--char3);font-size:.72rem;white-space:nowrap}.tag-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.85rem}.tag{font-size:.66rem;line-height:1;border:1px solid var(--border);padding:.28rem .5rem;border-radius:var(--radius-pill);color:var(--char3);background:var(--white)}
+    .prose-wrap{max-width:780px;margin:0 auto;padding:4rem var(--page-padding)}.prose-kicker{font-size:.68rem;letter-spacing:.25em;color:var(--sage);text-transform:uppercase;font-weight:400;margin-bottom:1rem}.prose-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(2rem,4vw,3.2rem);line-height:1.25;margin:0 0 1rem}.prose-meta{font-size:.72rem;color:var(--char3);letter-spacing:.1em;margin-bottom:2.2rem}.prose{font-size:.95rem;color:var(--char2);line-height:2}.prose h2{font-family:var(--font-serif);font-size:1.5rem;font-weight:500;line-height:1.4;margin:2.8rem 0 1rem;color:var(--char)}.prose p{margin:1.1rem 0}.prose blockquote{font-family:var(--font-serif);font-style:italic;color:var(--char3);border-left:2px solid var(--sage);padding-left:1.2rem;margin:2rem 0;line-height:2}.prose code{background:var(--off);border:1px solid var(--border);padding:.1rem .3rem;border-radius:3px}.prose pre{background:var(--off);border:1px solid var(--border);padding:1.2rem;overflow:auto;font-size:.78rem;line-height:1.7;color:var(--char2)}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}.panel{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-card);padding:2rem}.panel.off{background:var(--off)}.panel-title{font-family:var(--font-serif);font-size:1.25rem;font-weight:500;line-height:1.4;margin:0 0 .8rem}.panel-desc{font-size:.82rem;color:var(--char3);margin:0;line-height:1.85}.plain-list{list-style:none;padding:0;margin:1.2rem 0 0}.plain-list li{border-top:1px solid var(--border);padding:.85rem 0;color:var(--char3);font-size:.82rem;display:flex;gap:.5rem}.plain-list li:before{content:'・';color:var(--sage)}
+    .feature-band{border:1px solid var(--border);background:var(--off);padding:2rem;display:grid;grid-template-columns:1.2fr 2fr;gap:2rem;align-items:center}.band-title{font-family:var(--font-serif);font-size:1.45rem;font-weight:500;margin:0 0 .5rem}.band-desc{margin:0;color:var(--char3);font-size:.82rem}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}.mini{background:var(--white);padding:1rem}.mini b{font-family:var(--font-serif);font-weight:500;display:block;font-size:.9rem}.mini span{font-size:.7rem;color:var(--char3);line-height:1.6;display:block;margin-top:.2rem}
+    .form{display:grid;gap:.85rem}.input,.textarea,.select{width:100%;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-card);padding:.82rem 1rem;font-size:.82rem;color:var(--char2);outline:none;transition:var(--ease-fast)}.textarea{min-height:160px;resize:vertical}.input:focus,.textarea:focus,.select:focus{border-color:var(--sage);background:var(--off)}.check{display:flex;align-items:flex-start;gap:.65rem;font-size:.72rem;color:var(--char3);line-height:1.7}.check input{margin-top:.28rem;accent-color:var(--sage2)}.form-note{font-size:.72rem;color:var(--sage2);min-height:1.2em}.newsletter{background:var(--char);color:var(--white);padding:3rem;border-radius:var(--radius-card);display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;align-items:center}.newsletter h3{font-family:var(--font-serif);font-size:1.6rem;font-weight:500;margin:0 0 .6rem}.newsletter p{color:rgba(250,250,247,.58);font-size:.82rem;margin:0}.newsletter .input{background:rgba(250,250,247,.05);border-color:rgba(250,250,247,.12);color:var(--white)}.newsletter .btn-sage{width:100%;border:0}
+    .map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}.map-item{background:var(--white);padding:1.35rem;min-height:150px;transition:var(--ease)}.map-item:hover{background:var(--off)}.map-id{font-family:var(--font-mincho);color:var(--warm2);font-size:1.35rem}.map-name{font-family:var(--font-serif);font-weight:500;margin:.5rem 0 .3rem}.map-path{font-size:.66rem;color:var(--sage2);letter-spacing:.08em}.map-desc{font-size:.72rem;color:var(--char3);line-height:1.7;margin:.55rem 0 0}
+    .pathway{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}.step{background:var(--white);padding:1.5rem;min-height:210px}.step-num{font-family:var(--font-mincho);font-size:1.7rem;color:var(--warm2);line-height:1}.step h3{font-family:var(--font-serif);font-size:1rem;font-weight:500;margin:1rem 0 .4rem}.step p{font-size:.75rem;color:var(--char3);line-height:1.75;margin:0}
+    .timeline{border-left:1px solid var(--border);padding-left:2rem;display:grid;gap:1.8rem}.time-item{position:relative}.time-item:before{content:'';position:absolute;left:-2.31rem;top:.45rem;width:8px;height:8px;background:var(--sage);border-radius:50%}.time-item h3{font-family:var(--font-serif);font-size:1.05rem;font-weight:500;margin:0 0 .35rem}.time-item p{margin:0;color:var(--char3);font-size:.8rem;line-height:1.8}
+    .legal{max-width:860px;margin:0 auto;padding:4rem var(--page-padding);color:var(--char2)}.legal h2{font-family:var(--font-serif);font-size:1.45rem;font-weight:500;margin:2.2rem 0 .7rem}.legal p,.legal li{font-size:.85rem;line-height:1.9;color:var(--char3)}.legal ul{padding-left:1.1rem}.legal li::marker{color:var(--sage)}
+    .site-footer{position:relative;z-index:1;background:var(--char);color:rgba(250,250,247,.4);padding:3rem var(--page-padding);margin-top:0}.footer-inner{max-width:var(--max-width);margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:2rem}.footer-logo{font-family:var(--font-serif);font-weight:500;font-size:1.2rem;color:var(--white)}.footer-logo mark{background:transparent;color:var(--sage);padding:0}.footer-links{display:flex;gap:1rem;flex-wrap:wrap;justify-content:flex-end}.footer-links a,.copyright{font-size:.7rem;letter-spacing:.1em;color:rgba(250,250,247,.4);transition:var(--ease-fast)}.footer-links a:hover{color:var(--sage)}
+    .empty-state{background:var(--off);border:1px solid var(--border);padding:2rem;color:var(--char3);font-size:.82rem;text-align:center}.hidden{display:none!important}
+    @media (max-width:980px){.nav-inner{grid-template-columns:1fr auto;gap:1rem}.nav-links{grid-column:1 / -1;justify-content:flex-start;overflow:auto;padding:.4rem 0 .15rem}.hero-inner,.split,.newsletter,.feature-band{grid-template-columns:1fr;gap:2.5rem}.content-grid,.price-grid{grid-template-columns:1fr 1fr}.tools-grid,.map-grid{grid-template-columns:1fr 1fr}.pathway{grid-template-columns:1fr 1fr}.hero{min-height:auto}.hero-kanji,.page-kanji{font-size:8rem;right:0}}
+    @media (max-width:640px){:root{--page-padding:5%}.nav-actions{display:none}.hero{padding:8rem 0 4rem}.hero-title{font-size:2.35rem}.content-grid,.tools-grid,.price-grid,.map-grid,.mini-grid,.pathway{grid-template-columns:1fr}.article-card{grid-template-columns:1fr;gap:1rem}.article-side{text-align:left}.ct-item{min-height:auto}.footer-inner{display:grid;gap:1rem}.footer-links{justify-content:flex-start}.newsletter{padding:2rem}.page-head{padding:8rem 0 2.5rem}.hero-kanji,.page-kanji{display:none}}
+    @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="zen-bg" aria-hidden="true"></div>
+  <nav class="site-nav" aria-label="主导航">
+    <div class="nav-inner">
+      <a class="logo" href="#/home" data-nav="home">SOLO<mark>.X</mark><span class="logo-dot"></span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#/articles" data-nav="articles">文章</a>
+        <a href="#/music" data-nav="music">音乐</a>
+        <a href="#/courses" data-nav="courses">课程</a>
+        <a href="#/apps" data-nav="apps">小程序</a>
+        <a href="#/webapps" data-nav="webapps">网页应用</a>
+        <a href="#/games" data-nav="games">游戏</a>
+        <a href="#/tools" data-nav="tools">工具箱</a>
+        <a href="#/pricing" data-nav="pricing">会员</a>
+        <a href="#/about" data-nav="about">关于</a>
+      </div>
+      <div class="nav-actions">
+        <a class="nav-map" href="#/map" data-nav="map">站点地图</a>
+        <a class="nav-cta" href="#/opcx" data-nav="opcx">进入 OPC</a>
+      </div>
+    </div>
+  </nav>
+  <main id="app" tabindex="-1"></main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">SOLO<mark>.X</mark></div>
+        <div class="copyright">© 2026 SOLO.X · 一人公司创作平台</div>
+      </div>
+      <div class="footer-links">
+        <a href="#/privacy">隐私政策</a>
+        <a href="#/terms">使用条款</a>
+        <a href="#/contact">联系</a>
+        <a href="#/map">导航页</a>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const contentForms = [
+      {idx:'壹',type:'ARTICLES',name:'深度文章',desc:'成熟长文、观察札记、工具推荐和月度动态，构成 SOLO.X 的长期知识资产。',count:'86篇',price:'FREE / PRO',route:'articles'},
+      {idx:'贰',type:'MUSIC',name:'原创音乐',desc:'为内容、视频和产品叙事制作的原创音乐，强调情绪密度和品牌记忆。',count:'32首',price:'FREE',route:'music'},
+      {idx:'叁',type:'COURSES',name:'视频课程',desc:'OPC 方法论系统教程，从定位、产品、内容、工具到变现形成闭环。',count:'12节',price:'PRO',route:'courses'},
+      {idx:'肆',type:'MINI APPS',name:'微信小程序',desc:'面向移动场景的效率工具、数据看板与轻量运营插件。',count:'6款',price:'FREE / PRO',route:'apps'},
+      {idx:'伍',type:'WEB APPS',name:'网页应用',desc:'AI 写作、品牌命名、选题判断、商业灵感整理等可直接使用的 Web 工具。',count:'9款',price:'PRO',route:'webapps'},
+      {idx:'陆',type:'GAMES',name:'创意游戏',desc:'把方法论做成可体验的轻量网页游戏，让抽象框架变成可感知练习。',count:'5款',price:'FREE',route:'games'}
+    ];
+    const articles = [
+      {slug:'one-person-company-operating-system',type:'Essay',title:'一人公司的操作系统',excerpt:'一人公司不是缩小版公司，而是一套把判断、生产、分发和变现压缩到个人体内的系统。',tags:['OPC','商业系统','AI'],date:'2026-05-01',read:'18 min',premium:true,body:['一人公司的核心问题不是人少，而是系统密度不够。传统公司用组织结构吸收复杂度，一人公司只能用工具、流程和判断模型吸收复杂度。','真正有效的一人公司，会把每天重复发生的动作沉淀为组件：选题判断、内容生产、产品封装、销售页面、用户反馈、复盘记录。组件一旦稳定，个人就不再被单点任务吞没。','SOLO.X 的价值在于公开这套组件如何被生产、使用和迭代。你看到的不是完成品陈列，而是一个商业生态的形成过程。']},
+      {slug:'geo-as-content-infrastructure',type:'Tool',title:'GEO 是新的内容基础设施',excerpt:'当搜索入口变成生成式回答，内容生产的目标从排名转向可引用、可提取、可信任。',tags:['GEO','内容','增长'],date:'2026-04-22',read:'12 min',premium:false,body:['GEO 的第一性原理很简单：让生成式引擎在需要回答某个问题时，能够发现你、理解你、引用你。','这要求内容从情绪表达走向结构表达。标题、摘要、实体、定义、步骤、证据链，都需要以机器可解析的形式出现。','未来的内容资产会同时服务两类读者：人类读者需要理解成本更低，机器读者需要检索与引用成本更低。']},
+      {slug:'ai-toolbox-for-solo-creators',type:'Note',title:'AI 工具箱的边界',excerpt:'工具不是越多越好，真正的工具箱要围绕稳定任务链展开，减少切换和重复劳动。',tags:['工具箱','效率','AI'],date:'2026-04-12',read:'9 min',premium:false,body:['工具箱的价值不来自数量，而来自任务链覆盖率。一个工具不能进入稳定任务链，它就只是玩具。','一人公司最关键的工具链通常只有五条：研究、写作、设计、开发、分发。每条链只保留最少但最强的工具。','工具选择的最终标准是：能不能减少一个固定动作的认知成本。']},
+      {slug:'from-content-to-product',type:'Essay',title:'从内容走向产品',excerpt:'内容给你信任，产品给你收入。两者之间缺少的是可重复交付的结果。',tags:['产品化','内容创业'],date:'2026-03-30',read:'15 min',premium:true,body:['内容创业者最容易停在表达层。表达可以建立吸引力，但很难稳定变现。','产品化的关键，是把读者反复出现的问题转化成明确结果，再把这个结果封装为工具、课程、模板或服务。','内容负责解释问题，产品负责解决问题。只有两者形成回路，个人品牌才会进入商业状态。']},
+      {slug:'now-update-april',type:'Now Update',title:'四月动态：从内容库到工具库',excerpt:'这个月的主线是把分散的内容判断沉淀为工具，把灵感从笔记移动到可执行界面。',tags:['月度动态','建设记录'],date:'2026-04-30',read:'7 min',premium:false,body:['四月主要完成三件事：重构文章类型、整理 OPC 工具箱、启动课程大纲。','最大的变化是把「写过的东西」转化成「可反复调用的工具」。这一步很慢，但会改变整个网站的商业重心。','下个月的重点是订阅系统和会员入口。']},
+      {slug:'smidgeon-pattern-recognition',type:'Smidgeon',title:'模式识别的成本',excerpt:'识别模式本身不难，难的是把模式压缩成别人也能复用的结构。',tags:['灵感','认知'],date:'2026-04-04',read:'4 min',premium:false,body:['很多人以为模式识别是一种灵感能力，其实它更接近压缩能力。','你要把大量现象压成一个可迁移结构，然后再把结构翻译成可执行动作。','无法被别人使用的模式，只是私人感受。']},
+      {slug:'pricing-as-product-design',type:'Tool',title:'定价本身是一种产品设计',excerpt:'价格不是最后一步，它会反向塑造你的内容层级、工具边界和会员权益。',tags:['定价','会员'],date:'2026-03-16',read:'11 min',premium:true,body:['定价不是给已经完成的产品贴标签，它会反向决定产品要做到什么程度。','免费层负责让用户理解你，月付层负责让用户使用你，年度层负责让用户相信你会长期进化。','三档定价的设计要避免权益堆砌，必须让每一档对应一种明确的用户状态。']},
+      {slug:'transparent-building',type:'Essay',title:'透明建设的商业价值',excerpt:'把建设过程公开，不是分享日常，而是让信任在长期轨迹中自然生成。',tags:['公开建设','信任'],date:'2026-02-28',read:'13 min',premium:false,body:['透明建设不是流水账。它的本质是让外部用户看到你的判断如何形成，你的产品如何进化。','这会降低交易之前的信任成本。用户不只看到结果，也看到你处理问题的方式。','对于一人公司，过程就是资产的一部分。']}
+    ];
+    const tools = [
+      ['选题罗盘','判断一个选题是否具备传播、产品化和长期复利价值。','FREE','Strategy'],['标题炼金室','把普通标题压缩成具备点击理由和认知张力的标题组。','PRO','Content'],['GEO 摘要器','生成适合 AI 引用的文章摘要、实体定义和问题回答。','PRO','GEO'],['品牌命名器','围绕定位、语义、音节和可注册性生成品牌命名方案。','FREE','Brand'],['卖点压缩器','把复杂功能压缩为用户能立刻理解的购买理由。','PRO','Sales'],['课程骨架机','根据目标用户和交付结果生成课程大纲与章节结构。','PRO','Course'],['灵感卡片机','把碎片想法整理成 Obsidian 友好的原子化商业卡片。','FREE','Knowledge'],['文章重构器','将草稿重构为导语、结构、反常识观点和传播切片。','PRO','Writing'],['用户画像镜','从评论、私信、问卷中提炼真实用户需求和表达语言。','PRO','Research'],['定价阶梯器','设计免费、月付、年度三档权益边界与转化理由。','PRO','Revenue'],['工具说明书','把一个小工具写成可被用户理解和使用的落地页。','FREE','Product'],['复盘切片器','把项目复盘拆成判断、动作、结果、教训和下一步。','FREE','Ops'],['内容日历','生成适合一人公司的低负担内容发布节奏。','PRO','Ops'],['销售页冷启动','从价值主张到 FAQ 一次性生成基础销售页面。','PRO','Sales'],['小程序脚本','为轻量小程序生成 PRD、页面结构和接口草案。','PRO','App'],['视频脚本机','生成用于口播、课程或短视频的结构化脚本。','PRO','Video'],['社群议题池','设计适合会员社群讨论和共创的问题池。','PRO','Community'],['资产盘点表','盘点已有文章、工具、课程和可复用素材。','FREE','System']
+    ].map((x,i)=>({id:'tool-'+(i+1),idx:['壹','贰','叁','肆','伍','陆','柒','捌','玖','拾','拾壹','拾贰','拾叁','拾肆','拾伍','拾陆','拾柒','拾捌'][i],name:x[0],desc:x[1],tier:x[2],cat:x[3]}));
+    const music = [
+      ['雨后庭院','3:42','用于低声叙述、复盘和方法论开场。'],['旧纸灯','2:58','木质打击与低频铺底，适合工具演示。'],['一人茶室','4:16','慢速旋律，服务长期主义与安静写作场景。'],['竹影循环','1:48','网页动效与短视频转场循环音乐。'],['墨线行走','3:12','适合课程章节之间的理性过渡。'],['夜半原稿','2:34','更深、更克制的写作背景音乐。']
+    ];
+    const courses = [
+      ['定位','找到一人公司最小可行市场和长期表达母题。'],['内容','搭建文章、视频、工具说明书的稳定生产线。'],['产品','把方法论封装为工具、课程、模板和轻应用。'],['分发','建立 SEO、GEO、社交平台和邮件订阅的入口矩阵。'],['变现','设计会员、工具、咨询、课程的组合模型。'],['复盘','用月度更新和公开建设沉淀长期信任。']
+    ];
+    const apps = [
+      ['日课看板','每日创作、学习、复盘进度的移动看板。'],['灵感收集器','随手记录商业灵感，并自动归档到主题池。'],['会员通行证','展示订阅状态、权益和工具入口。'],['OPC 指南针','用问答方式判断当前商业阶段。'],['文章卡片机','把文章片段转成可分享图文卡。'],['任务清修表','用极简清单处理一人公司的固定动作。']
+    ];
+    const webapps = [
+      ['AI 写作工坊','从选题到成稿的一体化写作工作台。'],['品牌命名室','名称、口号、域名方向和语义资产生成。'],['GEO 体检台','检查文章是否适合被 AI 搜索与引用。'],['课程生成器','根据交付目标生成课程结构和脚本。'],['销售页编译器','把产品信息转成高转化落地页骨架。'],['内容资产库','检索、归类、重用已有文章和灵感。']
+    ];
+    const games = [
+      ['选题试炼','在 60 秒内判断选题是否值得做。'],['现金流迷宫','模拟一人公司收入、成本和时间分配。'],['标题棋局','用有限词汇组合出传播张力。'],['工具塔防','用自动化工具抵御重复劳动。'],['产品炼丹炉','把内容素材炼成工具、模板或课程。']
+    ];
+    const pages = [
+      ['home','首页','核心入口，展示定位、六种内容形式、工具箱、会员计划。'],['articles','文章列表','反向时间流、类型筛选、文章卡片和详情页入口。'],['article/[slug]','文章详情','标题、元数据、正文、代码块、订阅入口。'],['music','原创音乐','音乐作品展示与播放型列表。'],['courses','视频课程','OPC 方法论教程与课程落地页。'],['apps','微信小程序','效率工具与数据看板入口。'],['webapps','网页应用','AI 写作、品牌命名等 Web 工具。'],['games','创意游戏','轻量网页游戏和方法论体验。'],['tools','OPC 工具箱','18 款效率工具，含免费和 Pro 标签。'],['tool/[id]','工具详情','单个工具的用途、流程、输入输出和会员 CTA。'],['pricing','会员计划','三档定价与权益对比。'],['about','关于页','个人简介、能力标签、建设时间线。'],['contact','联系页','合作、订阅、咨询入口。'],['privacy','隐私政策','邮件订阅与个人信息处理说明。'],['terms','使用条款','会员、内容、工具和责任边界。'],['opcx','OPC 落地页','面向转化的一人公司方法论入口。'],['map','导航页','单文件网站的完整路由地图。']
+    ];
+    function priceCards(){return `<div class="price-grid">
+      <div class="pc-card"><div class="pc-tier">EXPLORER</div><div class="pc-price"><sup>¥</sup>0</div><div class="pc-period">永久免费</div><div class="pc-line"></div><ul class="pc-feats"><li>免费内容全量阅读</li><li>6 款基础工具</li><li>每月 3 篇付费文章预览</li><li>邮件订阅入口</li></ul><a class="pc-btn" href="#/articles">开始阅读</a></div>
+      <div class="pc-card pick"><div class="pc-tier">CREATOR</div><div class="pc-price"><sup>¥</sup>68</div><div class="pc-period">每月</div><div class="pc-line"></div><ul class="pc-feats"><li>全部文章与课程</li><li>18 款 Pro 工具</li><li>视频课程完整访问</li><li>社群讨论与案例拆解</li></ul><a class="pc-btn" href="#/contact">申请开通</a></div>
+      <div class="pc-card"><div class="pc-tier">ANNUAL</div><div class="pc-price"><sup>¥</sup>580</div><div class="pc-period">每年</div><div class="pc-line"></div><ul class="pc-feats"><li>创作者全部权益</li><li>每月研究报告</li><li>季度 1v1 问答</li><li>新功能优先体验</li></ul><a class="pc-btn" href="#/contact">年度加入</a></div>
+    </div>`}
+    function sectionHeader(kicker,title,haiku){return `<div class="section-header"><div class="sec-season">${kicker}</div><h2 class="sec-title">${title}</h2><p class="sec-haiku">${haiku}</p></div>`}
+    function ink(sym='竹'){return `<div class="ink-div"><span class="ink-sym">${sym}</span></div>`}
+    function newsletter(){return `<div class="newsletter"><div><h3>把建设过程，寄给你。</h3><p>每月一次，发送 SOLO.X 的文章、工具、课程和公开建设记录。只保留有用信息。</p></div><form class="form" data-form="newsletter"><input class="input" type="email" placeholder="your@email.com" required><label class="check"><input type="checkbox" required><span>我同意接收邮件，并理解可以随时退订。</span></label><button class="btn-sage" type="submit">订阅</button><div class="form-note"></div></form></div>`}
+    function toolCard(t){return `<a class="tl-item" href="#/tool/${t.id}"><h3 class="tl-name">${t.name}</h3><p class="tl-desc">${t.desc}</p><div class="tl-meta ${t.tier==='FREE'?'tl-free':'tl-pro'}">${t.tier} · ${t.cat}</div></a>`}
+    function home(){return `<div class="page">
+      <section class="hero"><div class="container hero-inner"><div class="hero-copy"><div class="eyebrow fade-in">GEO驱动 · 一人公司 · 创作生态</div><h1 class="hero-title fade-in delay-1">独行者创造的<br>无限可能</h1><p class="hero-quote fade-in delay-2">文字之间，有光。<br>工具之中，有路。<br>一人之力，可成生态。</p><div class="button-row fade-in delay-3"><a class="btn-sage" href="#/opcx">进入 OPC 系统</a><a class="btn-plain" href="#/articles">阅读最新文章 →</a></div></div><div class="stat-stack fade-in delay-2"><div class="hero-kanji">独</div><div class="zen-card"><div class="stat-num">240+</div><div class="stat-label">ORIGINAL CONTENT</div><div class="stat-desc">文章、课程、工具说明、公开建设记录，形成可持续复用的内容资产。</div></div><div class="zen-card"><div class="stat-num">18</div><div class="stat-label">OPC TOOLS</div><div class="stat-desc">覆盖定位、选题、写作、产品、销售、复盘的一人公司工具箱。</div></div><div class="zen-card"><div class="stat-num">5K+</div><div class="stat-label">CREATORS</div><div class="stat-desc">面向技术型独立创作者、内容创业者与 OPC 方法论实践者。</div></div></div></div></section>${ink('竹')}
+      <section class="section"><div class="container">${sectionHeader('内容创作','六种形式，一个宇宙','文章有骨，工具有用，课程有路。')}<div class="content-grid">${contentForms.map(f=>`<a class="ct-item" href="#/${f.route}"><span class="ct-index">${f.idx}</span><div class="ct-type">${f.type}</div><h3 class="ct-name">${f.name}</h3><p class="ct-desc">${f.desc}</p><div class="ct-foot"><span class="ct-count">${f.count}</span><span class="ct-price ${f.price.includes('PRO')?'price-paid':'price-free'}">${f.price}</span></div></a>`).join('')}</div></div></section>${ink('○')}
+      <section class="section alt"><div class="container">${sectionHeader('目标用户','谁会从这里受益','不是围观结果，是拿走结构。')}<div class="content-grid"><div class="ct-item"><span class="ct-index">一</span><div class="ct-type">DEVELOPER CREATOR</div><h3 class="ct-name">技术型独立创作者</h3><p class="ct-desc">有全栈能力、有 Side Project，想把技术能力转化为品牌、内容和收入。</p><div class="ct-foot"><span class="ct-count">核心需求</span><span class="ct-price price-free">方法 + 工具</span></div></div><div class="ct-item"><span class="ct-index">二</span><div class="ct-type">CONTENT FOUNDER</div><h3 class="ct-name">内容创业转型者</h3><p class="ct-desc">已经有内容影响力，希望借助 AI 和小工具降低产品化门槛。</p><div class="ct-foot"><span class="ct-count">核心需求</span><span class="ct-price price-paid">产品化</span></div></div><div class="ct-item"><span class="ct-index">三</span><div class="ct-type">OPC PRACTITIONER</div><h3 class="ct-name">OPC 探索者</h3><p class="ct-desc">已经实践一人公司，缺少系统框架、同类样本和可复用流程。</p><div class="ct-foot"><span class="ct-count">核心需求</span><span class="ct-price price-paid">框架 + 社群</span></div></div></div></div></section>${ink('墨')}
+      <section class="section"><div class="container">${sectionHeader('OPC工具箱','效率，是最好的禅','把重复动作，压成可调用工具。')}<div class="tools-grid">${tools.slice(0,8).map(toolCard).join('')}</div><div style="margin-top:1.5rem"><a class="btn-plain" href="#/tools">查看 18 款工具 →</a></div></div></section>${ink('◆')}
+      <section class="section alt"><div class="container">${sectionHeader('运营路径','从一个人，到一个系统','先有稳定动作，再有长期复利。')}<div class="pathway"><div class="step"><div class="step-num">01</div><h3>定位</h3><p>确定长期母题、目标用户和可承受的最小市场。</p></div><div class="step"><div class="step-num">02</div><h3>内容</h3><p>建立文章、视频、工具说明书的稳定表达资产。</p></div><div class="step"><div class="step-num">03</div><h3>工具</h3><p>把高频动作封装为轻量工具，降低交付成本。</p></div><div class="step"><div class="step-num">04</div><h3>产品</h3><p>把方法论转为课程、应用、会员和咨询权益。</p></div><div class="step"><div class="step-num">05</div><h3>复利</h3><p>用公开建设、邮件和社群沉淀长期信任。</p></div></div></div></section>${ink('∞')}
+      <section class="section"><div class="container">${sectionHeader('会员计划','选择你的创作境界','免费进入，深入则同行。')}${priceCards()}</div></section><section class="section"><div class="container">${newsletter()}</div></section></div>`}
+    function pageHead(kicker,title,desc,kanji){return `<header class="page-head"><div class="container"><div class="eyebrow">${kicker}</div><h1 class="page-title">${title}</h1><p class="page-desc">${desc}</p><div class="page-kanji">${kanji}</div></div></header>`}
+    function renderArticles(filter='全部'){const types=['全部','Essay','Note','Tool','Smidgeon','Now Update'];const list=filter==='全部'?articles:articles.filter(a=>a.type===filter);return `${pageHead('深度文章','把一人公司的判断，写成可复用资产。','文章系统承载成熟长文、成长中的想法、工具推荐、碎片灵感和月度动态。每篇文章都指向一个可执行问题。','文')}<section class="section"><div class="container"><div class="tabs" id="articleTabs">${types.map(t=>`<button class="tab ${t===filter?'active':''}" data-filter="${t}">${t}</button>`).join('')}</div><div class="article-list">${list.map(a=>`<a class="article-card" href="#/article/${a.slug}"><div><div class="article-meta">${a.type} · ${a.premium?'PRO':'FREE'}</div><h2 class="article-title">${a.title}</h2><p class="article-excerpt">${a.excerpt}</p><div class="tag-row">${a.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}</div></div><div class="article-side"><div>${a.date}</div><div>${a.read}</div></div></a>`).join('')}</div></div></section>`}
+    function renderArticle(slug){const a=articles.find(x=>x.slug===slug)||articles[0];return `<article class="prose-wrap"><div class="prose-kicker">${a.type} · ${a.premium?'PRO MEMBER':'FREE READ'}</div><h1 class="prose-title">${a.title}</h1><div class="prose-meta">${a.date} · ${a.read} · ${a.tags.join(' / ')}</div><div class="prose"><blockquote>${a.excerpt}</blockquote>${a.body.map((p,i)=>i===1?`<h2>${i===1?'核心判断':'延展'}</h2><p>${p}</p>`:`<p>${p}</p>`).join('')}<h2>可执行结论</h2><p>把这篇文章当成一个工具使用：找到一个正在重复发生的问题，写下你当前的判断，提炼一个动作模板，然后在下一次任务中验证它。</p><pre><code>task = repeated_problem
+model = judgment_pattern(task)
+asset = package(model, output='article / tool / course')
+ship(asset)</code></pre></div><div style="margin-top:2.5rem" class="button-row"><a class="btn-plain" href="#/articles">← 返回文章列表</a><a class="btn-sage" href="#/pricing">查看会员计划</a></div><div style="margin-top:3rem">${newsletter()}</div></article>`}
+    function catalogPage(kind){const dict={music:['原创音乐','声音，是内容的第二条线。','为视频、课程和品牌叙事而写的音乐资产。','音',music,'TRACKS'],courses:['视频课程','OPC 方法论系统教程。','把定位、内容、工具、产品、分发和复盘连成可执行路径。','课',courses,'LESSONS'],apps:['微信小程序','移动端的轻量效率入口。','让一人公司的日常动作在微信场景里可记录、可调用。','用',apps,'MINI APPS'],webapps:['网页应用','把方法论做成工具。','AI 写作、品牌命名、GEO 体检和销售页生成器等 Web 工具。','器',webapps,'WEB TOOLS'],games:['创意游戏','把抽象方法论做成体验。','用轻量游戏训练选题、定价、产品化和现金流判断。','戏',games,'PLAY']};const d=dict[kind];return `${pageHead(d[5],d[0],d[2],d[3])}<section class="section"><div class="container"><div class="content-grid">${d[4].map((x,i)=>`<a class="ct-item" href="${kind==='courses'?'#/course/'+(i+1):'#/'+kind}"><span class="ct-index">${['壹','贰','叁','肆','伍','陆','柒','捌'][i]}</span><div class="ct-type">${d[5]}</div><h3 class="ct-name">${x[0]}</h3><p class="ct-desc">${x[2]||x[1]}</p><div class="ct-foot"><span class="ct-count">${kind==='music'?x[1]:'第 '+(i+1)+' 单元'}</span><span class="ct-price ${i%3===0?'price-free':'price-paid'}">${i%3===0?'FREE':'PRO'}</span></div></a>`).join('')}</div></div></section><section class="section alt"><div class="container">${newsletter()}</div></section>`}
+    function courseDetail(id){const idx=(Number(id)||1)-1;const c=courses[idx]||courses[0];return `${pageHead('COURSE DETAIL',`课程 ${idx+1} · ${c[0]}`,c[1],'课')}<section class="section"><div class="container split"><div class="panel"><h2 class="panel-title">学习目标</h2><p class="panel-desc">本课目标是把「${c[0]}」从抽象概念转化为一套可执行动作，最终沉淀为一人公司长期可复用资产。</p><ul class="plain-list"><li>理解核心问题和常见误区</li><li>建立可操作的判断框架</li><li>完成一份本节课对应产物</li></ul></div><div class="panel off"><h2 class="panel-title">课程结构</h2><ul class="plain-list"><li>概念拆解：从现象回到机制</li><li>案例观察：真实一人公司场景</li><li>工作流：输入、处理、输出</li><li>作业：生成你的专属版本</li></ul><a class="btn-sage" href="#/pricing" style="margin-top:1.5rem">解锁完整课程</a></div></div></section>`}
+    function toolsPage(){return `${pageHead('OPC工具箱','十八款工具，服务一条任务链。','工具箱覆盖定位、研究、写作、产品、销售、运营和复盘。每个工具都围绕一人公司高频任务设计。','器')}<section class="section"><div class="container"><div class="tools-grid">${tools.map(toolCard).join('')}</div></div></section>`}
+    function toolDetail(id){const t=tools.find(x=>x.id===id)||tools[0];return `${pageHead(`${t.tier} TOOL`,t.name,t.desc,'器')}<section class="section"><div class="container"><div class="feature-band"><div><h2 class="band-title">工具工作流</h2><p class="band-desc">输入足够少，输出足够可用。工具只解决一个清晰问题。</p></div><div class="mini-grid"><div class="mini"><b>输入</b><span>目标、素材、约束和当前阶段。</span></div><div class="mini"><b>处理</b><span>基于 OPC 模型完成判断和压缩。</span></div><div class="mini"><b>输出</b><span>可复制、可执行、可迭代的结果。</span></div></div></div></div></section><section class="section alt"><div class="container split"><div class="panel"><h2 class="panel-title">适用场景</h2><ul class="plain-list"><li>你需要快速完成 ${t.cat} 类任务</li><li>你不想从空白文档重新开始</li><li>你希望把判断沉淀为稳定流程</li></ul></div><div class="panel"><h2 class="panel-title">访问权限</h2><p class="panel-desc">当前工具为 ${t.tier} 权限。免费工具可直接使用，Pro 工具属于创作者及年度会员权益。</p><div class="button-row" style="margin-top:1.5rem"><a class="btn-sage" href="#/pricing">查看会员</a><a class="btn-plain" href="#/tools">返回工具箱 →</a></div></div></div></section>`}
+    function pricingPage(){return `${pageHead('会员计划','免费进入，深入同行。','三档会员对应三种状态：探索、使用、长期共建。价格层级同时决定内容、工具、课程和社群权益边界。','会')}<section class="section"><div class="container">${priceCards()}</div></section><section class="section alt"><div class="container">${sectionHeader('权益边界','每一档都有清晰任务','不堆砌权益，只服务下一步。')}<div class="content-grid"><div class="ct-item"><span class="ct-index">阅</span><div class="ct-type">EXPLORER</div><h3 class="ct-name">看懂方向</h3><p class="ct-desc">适合第一次进入 SOLO.X 的用户，先通过文章和基础工具判断这里是否值得长期关注。</p></div><div class="ct-item"><span class="ct-index">用</span><div class="ct-type">CREATOR</div><h3 class="ct-name">开始使用</h3><p class="ct-desc">适合正在做内容、产品或工具的人，直接使用完整工具箱和课程。</p></div><div class="ct-item"><span class="ct-index">共</span><div class="ct-type">ANNUAL</div><h3 class="ct-name">长期同行</h3><p class="ct-desc">适合把一人公司作为长期方向的人，获得报告、问答和优先体验。</p></div></div></div></section>`}
+    function aboutPage(){return `${pageHead('关于 SOLO.X','一个人，也可以成为完整系统。','SOLO.X 由独立开发者、内容创作者和 AI 工具制造者创建。它不是作品集，而是一个持续公开建设的一人公司样本。','独')}<section class="section"><div class="container split"><div class="panel"><h2 class="panel-title">身份</h2><p class="panel-desc">独立开发者、内容创作者、AI 工具制造者。长期关注如何把技术、内容和商业压缩到一个可持续运行的个人系统里。</p><div class="tag-row"><span class="tag">Full Stack</span><span class="tag">AI Tools</span><span class="tag">OPC</span><span class="tag">GEO</span><span class="tag">Content System</span><span class="tag">Product Design</span></div></div><div class="panel off"><h2 class="panel-title">理念</h2><p class="panel-desc">不是教别人怎么成功，而是公开一个人如何判断、建造、失败、修正和变现。过程本身就是产品的一部分。</p><ul class="plain-list"><li>真实实践优先于概念包装</li><li>小而美优先于大而全</li><li>可复用工具优先于一次性表达</li></ul></div></div></section><section class="section alt"><div class="container">${sectionHeader('建设时间线','从内容库，到商业生态','长期主义，要有可见轨迹。')}<div class="timeline"><div class="time-item"><h3>内容资产</h3><p>以深度文章建立判断系统和长期搜索入口。</p></div><div class="time-item"><h3>工具封装</h3><p>将文章中的方法论逐步转化为 18 款 OPC 工具。</p></div><div class="time-item"><h3>课程系统</h3><p>把分散方法连接为完整的视频课程路径。</p></div><div class="time-item"><h3>会员生态</h3><p>用订阅、社群、报告和问答形成稳定商业闭环。</p></div></div></div></section>`}
+    function contactPage(){return `${pageHead('联系 SOLO.X','合作、反馈、加入。','可用于商务合作、工具反馈、会员咨询、课程共创和媒体采访。','信')}<section class="section"><div class="container split"><div class="panel"><h2 class="panel-title">联系表单</h2><form class="form" data-form="contact"><input class="input" placeholder="你的称呼" required><input class="input" type="email" placeholder="邮箱" required><select class="select"><option>会员咨询</option><option>商务合作</option><option>工具反馈</option><option>课程共创</option><option>媒体采访</option></select><textarea class="textarea" placeholder="请用最少文字说明你的需求" required></textarea><label class="check"><input type="checkbox" required><span>我同意 SOLO.X 根据隐私政策处理以上信息。</span></label><button class="btn-sage" type="submit">提交</button><div class="form-note"></div></form></div><div class="panel off"><h2 class="panel-title">其他入口</h2><ul class="plain-list"><li>GitHub：查看公开项目与工具实验</li><li>Twitter：跟踪建设过程和短思考</li><li>邮箱：hello@solo-x.example</li><li>微信：加入候补名单后开放</li></ul></div></div></section>`}
+    function opcxPage(){return `${pageHead('OPC METHOD','一人公司，不靠意志力运行。','OPC 是 SOLO.X 的核心方法论：One Person Company。它把定位、内容、工具、产品、分发和变现压成个人可承受的运营系统。','道')}<section class="section"><div class="container">${sectionHeader('落地页','从混乱动作，到稳定系统','先压缩，再放大。')}<div class="pathway"><div class="step"><div class="step-num">壹</div><h3>找母题</h3><p>明确你长期愿意研究、表达、产品化的核心问题。</p></div><div class="step"><div class="step-num">贰</div><h3>建资产</h3><p>把文章、视频、工具和案例沉淀到统一阵地。</p></div><div class="step"><div class="step-num">叁</div><h3>封工具</h3><p>把重复任务从人工动作变成可调用工具。</p></div><div class="step"><div class="step-num">肆</div><h3>做会员</h3><p>让不同深度用户进入对应权益层级。</p></div><div class="step"><div class="step-num">伍</div><h3>复盘迭代</h3><p>公开建设，持续修正，让过程成为信任资产。</p></div></div><div style="margin-top:2rem" class="button-row"><a class="btn-sage" href="#/pricing">加入会员</a><a class="btn-plain" href="#/tools">先看工具箱 →</a></div></div></section><section class="section alt"><div class="container">${sectionHeader('三层价值','不是灵感，是商业结构','表层有用，中层可复制，深层可信任。')}<div class="content-grid"><div class="ct-item"><span class="ct-index">表</span><div class="ct-type">SURFACE</div><h3 class="ct-name">内容与工具</h3><p class="ct-desc">240+ 内容和 18 款工具，一站式获取。</p></div><div class="ct-item"><span class="ct-index">中</span><div class="ct-type">SYSTEM</div><h3 class="ct-name">运营框架</h3><p class="ct-desc">从定位到产品到变现的全链路方法论。</p></div><div class="ct-item"><span class="ct-index">深</span><div class="ct-type">TRUST</div><h3 class="ct-name">真实样本</h3><p class="ct-desc">持续迭代、透明运营的一人公司实践。</p></div></div></div></section>`}
+    function mapPage(){return `${pageHead('导航页','单文件中的完整网站。','所有页面、列表页、详情页、落地页和法律页都压缩在一个 HTML 文件中，通过 hash 路由切换。','图')}<section class="section"><div class="container"><div class="map-grid">${pages.map((p,i)=>`<a class="map-item" href="#/${p[0].includes('[')?(p[0].startsWith('article')?'article/one-person-company-operating-system':'tool/tool-1'):p[0]}"><div class="map-id">${String(i+1).padStart(2,'0')}</div><div class="map-name">${p[1]}</div><div class="map-path">#/${p[0]}</div><p class="map-desc">${p[2]}</p></a>`).join('')}</div></div></section>`}
+    function legalPage(type){const isPrivacy=type==='privacy';return `${pageHead(isPrivacy?'PRIVACY':'TERMS',isPrivacy?'隐私政策':'使用条款',isPrivacy?'用于说明 SOLO.X 如何处理订阅、联系和会员相关信息。':'用于说明内容、工具、会员服务和责任边界。',isPrivacy?'隐':'法')}<div class="legal"><h2>${isPrivacy?'信息收集':'服务范围'}</h2><p>${isPrivacy?'SOLO.X 原型站点展示邮件订阅、联系表单和会员咨询入口。正式上线后，仅收集完成订阅、联系和服务交付所必需的信息。':'SOLO.X 提供文章、课程、工具、音乐、应用、游戏和会员服务。所有内容用于学习、研究和个人生产力提升，不构成法律、财务或投资建议。'}</p><h2>${isPrivacy?'使用目的':'会员权益'}</h2><p>${isPrivacy?'信息仅用于发送邮件、回复咨询、管理会员权益、改进产品体验和履行合规义务。用户可随时退订邮件或申请删除信息。':'会员权益以当前页面展示为准。免费、创作者和年度会员分别对应不同访问权限，平台可根据产品迭代调整权益说明。'}</p><h2>${isPrivacy?'用户权利':'内容版权'}</h2><ul><li>${isPrivacy?'访问、更正或删除个人信息。':'网站文章、工具说明、课程和视觉设计均归 SOLO.X 或对应权利人所有。'}</li><li>${isPrivacy?'取消订阅或撤回同意。':'未经授权，不得批量复制、转售、镜像或用于竞争性产品。'}</li><li>${isPrivacy?'请求说明信息处理规则。':'可在合理引用范围内分享链接和短摘录。'}</li></ul><h2>联系</h2><p>如需联系，请访问联系页提交表单或发送邮件至 hello@solo-x.example。</p></div>`}
+    function notFound(){return `${pageHead('404','页面未找到。','这个路由不存在。你可以返回首页或查看导航页。','空')}<section class="section"><div class="container"><div class="button-row"><a class="btn-sage" href="#/home">返回首页</a><a class="btn-plain" href="#/map">查看导航页 →</a></div></div></section>`}
+    function render(){const raw=(location.hash||'#/home').replace(/^#\/?/,'');const [page,param]=raw.split('/');let html='';if(page===''||page==='home')html=home();else if(page==='articles')html=renderArticles();else if(page==='article')html=renderArticle(param);else if(['music','courses','apps','webapps','games'].includes(page))html=catalogPage(page);else if(page==='course')html=courseDetail(param);else if(page==='tools')html=toolsPage();else if(page==='tool')html=toolDetail(param);else if(page==='pricing')html=pricingPage();else if(page==='about')html=aboutPage();else if(page==='contact')html=contactPage();else if(page==='opcx')html=opcxPage();else if(page==='map')html=mapPage();else if(page==='privacy'||page==='terms')html=legalPage(page);else html=notFound();const app=document.getElementById('app');app.innerHTML=html;app.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});setActive(page||'home');bindForms();bindArticleTabs();}
+    function setActive(page){document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('active',a.dataset.nav===page));}
+    function bindForms(){document.querySelectorAll('form[data-form]').forEach(form=>{form.addEventListener('submit',e=>{e.preventDefault();const note=form.querySelector('.form-note');if(note) note.textContent='已记录为原型交互。正式上线后接入 Resend / Server Actions。';});});}
+    function bindArticleTabs(){const tabs=document.getElementById('articleTabs');if(!tabs)return;tabs.addEventListener('click',e=>{const btn=e.target.closest('[data-filter]');if(!btn)return;document.getElementById('app').innerHTML=renderArticles(btn.dataset.filter);bindArticleTabs();window.scrollTo({top:0,behavior:'smooth'});});}
+    window.addEventListener('hashchange',render);
+    render();
+  </script>
+</body>
+</html>
