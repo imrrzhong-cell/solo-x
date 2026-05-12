@@ -31,7 +31,18 @@ export interface ScoredItem {
 
 export interface DailyReport {
   id: number;
-  report_type: "daily" | "weekly";
+  report_type: "daily";
+  report_date: string;
+  title: string;
+  summary: string;
+  content_json: Record<string, ReportItem[]>;
+  stats_json: ReportStats;
+  created_at: string;
+}
+
+export interface WeeklyReport {
+  id: number;
+  report_type: "weekly";
   report_date: string;
   title: string;
   summary: string;
