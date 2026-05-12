@@ -18,6 +18,7 @@ async function getFeaturedItems(category?: string, page = 1, size = 20): Promise
     JOIN scored_contents sc ON sc.content_id = c.id
     JOIN sources s ON s.id = c.source_id
     WHERE sc.is_featured = true ${categoryFilter}
+      AND c.published_at >= NOW() - INTERVAL '7 days'
     ORDER BY sc.score DESC, c.published_at DESC
     LIMIT ${size} OFFSET ${offset}
   `;

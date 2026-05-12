@@ -12,6 +12,8 @@ export interface FetchedItem {
   source_id: number;
 }
 
+const MAX_AGE_DAYS = 7;
+
 export interface FetchResult {
   source_id: number;
   source_name: string;
@@ -66,12 +68,24 @@ function parseRssFeed(xml: string, sourceId: number): FetchedItem[] {
   let feedItems = parsed?.rss?.channel?.item;
   // Try Atom format
   if (!feedItems) feedItems = parsed?.feed?.entry;
+  // Try RSS 1.0 (RDF) format
+  if (!feedItems) feedItems = parsed?.["rdf:RDF"]?.item || parsed?.RDF?.item;
   if (!feedItems) return items;
 
   const entries = Array.isArray(feedItems) ? feedItems : [feedItems];
 
   for (const entry of entries) {
-    const url = entry.link || entry?.["@_href"] || "";
+    const rawLink = entry.link;
+    let url = "";
+    if (typeof rawLink === "string" && rawLink.startsWith("http")) {
+      url = rawLink;
+    } else if (typeof rawLink === "object" && rawLink?.["@_href"]) {
+      url = rawLink["@_href"];
+    } else if (typeof rawLink === "string" && rawLink) {
+      url = rawLink;
+    } else {
+      url = entry?.["@_href"] || "";
+    }
     const title = entry.title || "";
     if (!url || !title) continue;
 
@@ -79,7 +93,7 @@ function parseRssFeed(xml: string, sourceId: number): FetchedItem[] {
     const contentStr = typeof content === "object" ? content["#text"] || "" : content;
     const cleanText = stripHtml(String(contentStr));
 
-    items.push({
+    const item: FetchedItem = {
       url,
       url_hash: hashUrl(url),
       title: typeof title === "object" ? title["#text"] || "" : String(title),
@@ -88,7 +102,17 @@ function parseRssFeed(xml: string, sourceId: number): FetchedItem[] {
       language: detectLanguage(cleanText || String(title)),
       published_at: parseDate(entry.pubDate || entry.published || entry.updated),
       source_id: sourceId,
-    });
+    };
+
+    // Skip articles older than MAX_AGE_DAYS (only if we have a confirmed old date)
+    if (item.published_at) {
+      const pubDate = new Date(item.published_at);
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - MAX_AGE_DAYS);
+      if (pubDate < cutoff) continue;
+    }
+
+    items.push(item);
   }
 
   return items;
@@ -101,7 +125,10 @@ async function fetchSource(source: { id: number; name: string; url: string; feed
 
     const response = await fetch(source.url, {
       signal: controller.signal,
-      headers: { "User-Agent": "MyAIHOT/1.0 (RSS Reader)" },
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; MyAIHOT/1.0; +https://solo-x.vercel.app)",
+        "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+      },
     });
     clearTimeout(timeout);
 
@@ -110,6 +137,10 @@ async function fetchSource(source: { id: number; name: string; url: string; feed
     }
 
     const text = await response.text();
+    const trimmed = text.trim();
+    if (!trimmed.startsWith("<?xml") && !trimmed.startsWith("<rss") && !trimmed.startsWith("<feed") && !trimmed.startsWith("<rdf")) {
+      return { source_id: source.id, source_name: source.name, items: [], success: false, error: "Response is not XML" };
+    }
     const items = parseRssFeed(text, source.id);
     return { source_id: source.id, source_name: source.name, items, success: true };
   } catch (err: any) {
