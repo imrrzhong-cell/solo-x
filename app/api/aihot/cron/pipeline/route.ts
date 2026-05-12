@@ -15,13 +15,12 @@ export async function POST(req: NextRequest) {
   try {
     await ensureSchema();
 
-    // Fetch due sources (limit 5 per run for timeout safety)
+    // Fetch due sources — process all at once (daily cron on Hobby plan)
     const sources = (await sql`
       SELECT * FROM sources
       WHERE active = true
         AND (last_fetched_at IS NULL OR last_fetched_at < NOW() - (fetch_interval_minutes || ' minutes')::interval)
       ORDER BY tier ASC, last_fetched_at ASC NULLS FIRST
-      LIMIT 5
     `) as any[];
 
     if (sources.length === 0) {
