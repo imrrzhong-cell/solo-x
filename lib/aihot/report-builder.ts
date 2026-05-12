@@ -1,25 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { sql } from "@/lib/aihot/db";
 
-let _client: Anthropic | null = null;
-function getClient(): Anthropic {
-  if (!_client) {
-    _client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  }
-  return _client;
-}
-
-interface ScoredItemForReport {
-  id: number;
-  title: string;
-  translated_title: string | null;
-  url: string;
-  score: number;
-  category: string;
-  summary_cn: string;
-  keywords: string;
-  published_at: string | null;
-}
+const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || "";
+const ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4";
+const SCORING_MODEL = process.env.SCORING_MODEL || "glm-4-flash";
 
 interface ReportContent {
   [category: string]: {
@@ -66,6 +49,29 @@ const WEEKLY_REPORT_PROMPT = `你是一位 AI 行业分析师。基于以下本�
 
 只返回 JSON，不要其他内容。`;
 
+async function callZhipu(prompt: string, maxTokens = 1000): Promise<string> {
+  const res = await fetch(`${ZHIPU_BASE_URL}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${ZHIPU_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: SCORING_MODEL,
+      max_tokens: maxTokens,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Zhipu API error ${res.status}: ${err}`);
+  }
+
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || "";
+}
+
 /**
  * Build a daily report for the given date.
  */
@@ -74,7 +80,6 @@ export async function buildDailyReport(date: string): Promise<{
   summary: string;
   contentJson: ReportContent;
 }> {
-  // 1. Fetch featured items for the date
   const items = (await sql`
     SELECT c.id, c.title, sc.translated_title, c.url, sc.score,
            sc.category, sc.summary_cn, sc.keywords, c.published_at
@@ -95,7 +100,6 @@ export async function buildDailyReport(date: string): Promise<{
     };
   }
 
-  // 2. Organize by category
   const contentJson: ReportContent = {};
   for (const item of items) {
     const cat = item.category || "other";
@@ -109,25 +113,13 @@ export async function buildDailyReport(date: string): Promise<{
     });
   }
 
-  // 3. Generate AI narrative
   const itemsText = items
     .slice(0, 20)
     .map((item, i) => `[${i + 1}] ${(item.translated_title || item.title)} (评分:${item.score}) — ${item.summary_cn}`)
     .join("\n");
 
-  const client = getClient();
-  const model = process.env.SCORING_MODEL || "claude-haiku-4-5-20251001";
-
   try {
-    const response = await client.messages.create({
-      model,
-      max_tokens: 1000,
-      messages: [
-        { role: "user", content: REPORT_PROMPT.replace("{items}", itemsText) }
-      ],
-    });
-
-    const text = response.content[0].type === "text" ? response.content[0].text : "{}";
+    const text = await callZhipu(REPORT_PROMPT.replace("{items}", itemsText), 1000);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
@@ -148,7 +140,6 @@ export async function buildWeeklyReport(weekStart: string): Promise<{
   summary: string;
   contentJson: ReportContent;
 }> {
-  // 1. Fetch featured items for the week
   const items = (await sql`
     SELECT c.id, c.title, sc.translated_title, c.url, sc.score,
            sc.category, sc.summary_cn, sc.keywords, c.published_at
@@ -169,7 +160,6 @@ export async function buildWeeklyReport(weekStart: string): Promise<{
     };
   }
 
-  // 2. Organize by category
   const contentJson: ReportContent = {};
   for (const item of items) {
     const cat = item.category || "other";
@@ -183,25 +173,13 @@ export async function buildWeeklyReport(weekStart: string): Promise<{
     });
   }
 
-  // 3. Generate AI narrative
   const itemsText = items
     .slice(0, 30)
     .map((item, i) => `[${i + 1}] ${(item.translated_title || item.title)} (评分:${item.score}) — ${item.summary_cn}`)
     .join("\n");
 
-  const client = getClient();
-  const model = process.env.SCORING_MODEL || "claude-haiku-4-5-20251001";
-
   try {
-    const response = await client.messages.create({
-      model,
-      max_tokens: 1500,
-      messages: [
-        { role: "user", content: WEEKLY_REPORT_PROMPT.replace("{items}", itemsText) }
-      ],
-    });
-
-    const text = response.content[0].type === "text" ? response.content[0].text : "{}";
+    const text = await callZhipu(WEEKLY_REPORT_PROMPT.replace("{items}", itemsText), 1500);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);

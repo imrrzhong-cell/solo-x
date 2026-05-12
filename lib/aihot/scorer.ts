@@ -1,17 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { sql } from "@/lib/aihot/db";
 import type { FetchedItem } from "./dedupe";
 
-// Initialize Anthropic client lazily
-let _client: Anthropic | null = null;
-function getClient(): Anthropic {
-  if (!_client) {
-    _client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  }
-  return _client;
-}
-
-const SCORING_MODEL = process.env.SCORING_MODEL || "claude-haiku-4-5-20251001";
+const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || "";
+const ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4";
+const SCORING_MODEL = process.env.SCORING_MODEL || "glm-4-flash";
 
 const SCORING_PROMPT = `你是一位 AI 领域的专业内容评估师。请评估以下文章的价值。
 
@@ -47,15 +39,36 @@ interface ScoreResult {
 
 const BATCH_SIZE = 5;
 
+async function callZhipu(prompt: string, maxTokens = 2000): Promise<string> {
+  const res = await fetch(`${ZHIPU_BASE_URL}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${ZHIPU_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: SCORING_MODEL,
+      max_tokens: maxTokens,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Zhipu API error ${res.status}: ${err}`);
+  }
+
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || "";
+}
+
 /**
- * Score a batch of fetched items using Anthropic Claude,
- * then insert contents and scored_contents into the database.
+ * Score items via Zhipu GLM, then insert contents and scored_contents into DB.
  * Returns the number of items successfully saved.
  */
 export async function saveScoredItems(items: FetchedItem[]): Promise<number> {
   if (items.length === 0) return 0;
 
-  const client = getClient();
   let saved = 0;
 
   for (let i = 0; i < items.length; i += BATCH_SIZE) {
@@ -70,45 +83,25 @@ export async function saveScoredItems(items: FetchedItem[]): Promise<number> {
 
     let scores: ScoreResult[];
     try {
-      const response = await client.messages.create({
-        model: SCORING_MODEL,
-        max_tokens: 2000,
-        messages: [
-          {
-            role: "user",
-            content: SCORING_PROMPT.replace("{articles}", articlesText),
-          },
-        ],
-      });
+      const text = await callZhipu(SCORING_PROMPT.replace("{articles}", articlesText));
 
-      const text =
-        response.content[0].type === "text"
-          ? response.content[0].text
-          : "[]";
-
-      // Extract JSON from potential markdown code blocks
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       if (!jsonMatch) {
-        console.error(`Scoring batch ${Math.floor(i / BATCH_SIZE) + 1}: no JSON found in response`);
+        console.error(`Scoring batch ${Math.floor(i / BATCH_SIZE) + 1}: no JSON found`);
         continue;
       }
 
       scores = JSON.parse(jsonMatch[0]);
     } catch (err) {
-      console.error(
-        `Scoring batch ${Math.floor(i / BATCH_SIZE) + 1} failed:`,
-        err
-      );
+      console.error(`Scoring batch ${Math.floor(i / BATCH_SIZE) + 1} failed:`, err);
       continue;
     }
 
-    // Save each scored item to the database
     for (let j = 0; j < batch.length && j < scores.length; j++) {
       const item = batch[j];
       const s = scores[j];
 
       try {
-        // Insert content
         const contentRows = (await sql`
           INSERT INTO contents (source_id, url, url_hash, title, original_text, clean_text, language, published_at)
           VALUES (${item.source_id}, ${item.url}, ${item.url_hash}, ${item.title},
@@ -121,7 +114,6 @@ export async function saveScoredItems(items: FetchedItem[]): Promise<number> {
         if (contentRows.length === 0) continue;
         const contentId = (contentRows[0] as any).id;
 
-        // Insert score
         await sql`
           INSERT INTO scored_contents (content_id, score, category, summary_cn, translated_title, reason, keywords, is_featured)
           VALUES (${contentId}, ${s.score}, ${s.category}, ${s.summary_cn}, ${s.translated_title}, ${s.reason}, ${s.keywords}, ${s.is_featured || s.score >= 65})
