@@ -1,13 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ensureSchema } from "@/lib/aihot/db";
+import { buildWeeklyReport, saveReport } from "@/lib/aihot/report-builder";
+
+export const maxDuration = 60;
+
+function getWeekStart(date: Date): string {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  return d.toISOString().split("T")[0];
+}
+
+export async function POST(req: NextRequest) {
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await ensureSchema();
+
+    const monday = getWeekStart(new Date());
+    const { title, summary, contentJson } = await buildWeeklyReport(monday);
+    await saveReport("weekly", monday, title, summary, contentJson);
+
+    return NextResponse.json({ weekStart: monday, title, itemCount: Object.values(contentJson).flat().length });
+  } catch (err: any) {
+    console.error("Weekly report error:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
 
 export async function GET(req: NextRequest) {
-  if (req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const w = process.env.WORKER_API_URL; const k = process.env.WORKER_API_KEY;
-  if (!w) return NextResponse.json({ error: "Worker not configured" }, { status: 503 });
-  const now = new Date();
-  const d = now.getDay();
-  const monday = new Date(now); monday.setDate(now.getDate() + (d === 0 ? -6 : 1 - d));
-  const ws = monday.toISOString().split("T")[0];
-  const res = await fetch(`${w}/worker/report/weekly/${ws}`, { method: "POST", headers: { "X-Worker-Key": k || "" } });
-  return NextResponse.json(await res.json(), { status: res.status });
+  return POST(req);
 }
