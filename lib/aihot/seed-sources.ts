@@ -44,6 +44,26 @@ export const SEED_SOURCES: SeedSource[] = [
   { name: "Andrej Karpathy", url: "https://karpathy.github.io/feed.xml", feed_type: "rss", tier: "T2", category: "博客", fetch_interval_minutes: 360 },
   { name: "The Gradient", url: "https://thegradient.pub/rss/", feed_type: "rss", tier: "T2", category: "博客", fetch_interval_minutes: 360 },
   { name: "Ahead of AI", url: "https://magazine.sebastianraschka.com/feed", feed_type: "rss", tier: "T2", category: "博客", fetch_interval_minutes: 360 },
+
+  // T1 商业洞察
+  { name: "Stratechery", url: "https://stratechery.com/feed/", feed_type: "rss", tier: "T1", category: "opinion", fetch_interval_minutes: 1440 },
+  { name: "a16z AI", url: "https://a16z.com/category/ai/feed/", feed_type: "rss", tier: "T1", category: "opinion", fetch_interval_minutes: 1440 },
+  { name: "Elad Gil", url: "https://blog.eladgil.com/feed", feed_type: "rss", tier: "T1", category: "opinion", fetch_interval_minutes: 1440 },
+
+  // T2 AI 商业化
+  { name: "Latent Space", url: "https://www.latent.space/feed", feed_type: "rss", tier: "T2", category: "product", fetch_interval_minutes: 1440 },
+  { name: "One Useful Thing", url: "https://www.oneusefulthing.org/feed", feed_type: "rss", tier: "T2", category: "product", fetch_interval_minutes: 1440 },
+  { name: "Lenny's Newsletter", url: "https://www.lennysnewsletter.com/feed", feed_type: "rss", tier: "T2", category: "product", fetch_interval_minutes: 1440 },
+
+  // T2 工程实战
+  { name: "Eugene Yan", url: "https://eugeneyan.com/feed.xml", feed_type: "rss", tier: "T2", category: "tool", fetch_interval_minutes: 1440 },
+  { name: "Chip Huyen", url: "https://huyenchip.com/feed.xml", feed_type: "rss", tier: "T2", category: "tool", fetch_interval_minutes: 1440 },
+  { name: "Simon Willison", url: "https://simonwillison.net/atom/entries/", feed_type: "rss", tier: "T2", category: "tool", fetch_interval_minutes: 1440 },
+  { name: "Lilian Weng", url: "https://lilianweng.github.io/lil-log/feed.xml", feed_type: "rss", tier: "T2", category: "research", fetch_interval_minutes: 1440 },
+
+  // T2 中文深研
+  { name: "宝玉的分享", url: "https://baoyu.io/feed.xml", feed_type: "rss", tier: "T2", category: "opinion", fetch_interval_minutes: 1440 },
+  { name: "极客公园", url: "https://www.geekpark.net/rss", feed_type: "rss", tier: "T2", category: "opinion", fetch_interval_minutes: 1440 },
 ];
 
 export async function seedSources(sql: any): Promise<void> {

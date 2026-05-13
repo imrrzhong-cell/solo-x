@@ -1,7 +1,7 @@
 {
   "crons": [
-    { "path": "/api/aihot/cron/pipeline", "schedule": "0 0 * * *" },
-    { "path": "/api/aihot/cron/daily-report", "schedule": "0 23 * * *" },
-    { "path": "/api/aihot/cron/weekly-report", "schedule": "30 23 * * 0" }
+    { "path": "/api/aihot/cron/pipeline", "schedule": "0 20 * * *" },
+    { "path": "/api/aihot/cron/daily-report", "schedule": "0 22 * * *" },
+    { "path": "/api/aihot/cron/weekly-report", "schedule": "30 22 * * 0" }
   ]
 }
