@@ -40,7 +40,7 @@ export default function Home() {
           </div>
           <div className="stat-stack fade-in delay-2">
             <div className="hero-timeline">
-              <Link href="/article/opc-asset-consciousness" className="hero-timeline-item">
+              <Link href="/articles/opc-asset-consciousness" className="hero-timeline-item">
                 <span className="hero-tl-date">2026-05-14</span>
                 <span className="hero-tl-tag">ESSAY</span>
                 <span className="hero-tl-title">一人公司的资产意识</span>
@@ -60,12 +60,12 @@ export default function Home() {
                 <span className="hero-tl-tag">SITE</span>
                 <span className="hero-tl-title">SOLO.X 正式上线</span>
               </div>
-              <Link href="/article/one-person-company-operating-system" className="hero-timeline-item">
+              <Link href="/articles/one-person-company-operating-system" className="hero-timeline-item">
                 <span className="hero-tl-date">2026-05-01</span>
                 <span className="hero-tl-tag">ESSAY</span>
                 <span className="hero-tl-title">一人公司的操作系统</span>
               </Link>
-              <Link href="/article/geo-as-content-infrastructure" className="hero-timeline-item">
+              <Link href="/articles/geo-as-content-infrastructure" className="hero-timeline-item">
                 <span className="hero-tl-date">2026-04-22</span>
                 <span className="hero-tl-tag">TOOL</span>
                 <span className="hero-tl-title">GEO 是新的内容基础设施</span>
