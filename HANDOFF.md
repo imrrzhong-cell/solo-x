@@ -1,69 +1,71 @@
-# HANDOFF.md
+# 2026-05-12 MyAIHOT 部署接力记录
 
 ## 当前目标
 
-为 SOLO.X 个人网站设计一套长期运营方法：不引入复杂 CMS，以 AI 在代码层持续维护为核心，同时解决“用户很难直观指出要改哪里”的问题。用户已明确：stagewise 不可用，因此方案不能依赖 stagewise。
+按 `TODO-2026-05-12.md` 完成 MyAIHOT 的 Neon 数据库、Fly.io worker、Vercel 环境变量和部署后验证。
 
-## 已完成工作
+## 已完成
 
-- 阅读了项目约束与架构：Next.js 16 + App Router + MDX + 自定义 CSS + Vercel 部署。
-- 确认当前仓库适合“AI 直接改代码 + Git/Vercel 预览审核”的运营模式。
-- 查看了关键文件：
-  - `AGENTS.md`
-  - `package.json`
-  - `app/(site)/page.tsx`
-  - `lib/features.ts`
-  - `app/admin/command/command-panel.tsx`
-  - `app/api/admin/command/route.ts`
-  - `lib/admin/claude.ts`
-- 已进行外部调研：Vercel Preview/Toolbar/Comments、Chrome DevTools MCP、Playwright MCP、Playwright visual comparison，以及 Tina/Decap/Payload 等 CMS 方向。
+- 已在 Neon 创建项目，区域为 Singapore / `ap-southeast-1`。
+- 已取得 Neon PostgreSQL 连接串，数据库名为 `neondb`。
+- 已在 Neon SQL Editor 执行 `CREATE EXTENSION IF NOT EXISTS vector;`，页面返回 `Statement executed successfully`。
+- 用户决定使用智谱 BigModel API Key，而不是 Anthropic Key。
+- 已修改 `/Users/rustyryan/Desktop/files/myaihot-worker/` 的 worker 代码，使其在设置 `ZHIPU_API_KEY` 时通过智谱 OpenAI-compatible chat completions 调用模型，同时保留 Anthropic fallback。
+- 已跑 worker 测试：`51 passed, 2 warnings`。
 
-## 关键发现
+## 已改文件
 
-- 当前站点的运营改动主要分为：MDX 内容、首页/页面文案、CSS 视觉样式、功能开关、订阅/表单配置、SEO/发布配置。
-- 仓库已有 `npm run build`、`npm run lint`，但没有正式测试脚本；`package.json` 有 Playwright 依赖但未建立视觉回归流程。
-- 本地 admin 指令中心目前调用的是 `claude` CLI，界面文案也是 Claude Code，不是 Codex。
-- `AGENTS.md` 说明 admin 是本地工具，不应部署到生产。
+- `/Users/rustyryan/Desktop/files/myaihot-worker/app/config.py`
+- `/Users/rustyryan/Desktop/files/myaihot-worker/app/services/llm_client.py`
+- `/Users/rustyryan/Desktop/files/myaihot-worker/app/services/scorer.py`
+- `/Users/rustyryan/Desktop/files/myaihot-worker/app/services/report_builder.py`
+- `/Users/rustyryan/Desktop/files/myaihot-worker/.env.example`
+- `/Users/rustyryan/Desktop/files/myaihot-worker/tests/test_config.py`
+- 本文件：`HANDOFF.md`
 
-## 命令和验证
+## 验证命令
 
-- 已运行：
-  - `rg --files`
-  - `sed` / `nl` 查看关键文件
-  - `git status --short`
-  - `git diff -- middleware.ts`
-- 未运行：
-  - `npm run build`
-  - `npm run lint`
-  - dev server
+```bash
+cd /Users/rustyryan/Desktop/files/myaihot-worker
+. .venv/bin/activate && pytest
+```
 
-## 当前状态/阻塞
+结果：`51 passed, 2 warnings`。
 
-- 这轮只做调研与方案，不做业务代码修改。
-- 工作区已有非本轮创建的变更：
-  - `middleware.ts` 已修改
-  - `AGENTS.md` 未跟踪
-  - `CLAUDE.md` 未跟踪
-- 本轮新增文件：
-  - `HANDOFF.md`
+## 当前状态 / 阻塞
 
-## 建议下一步
+- 正在安装 Fly CLI。此前 GitHub 下载多次超时；用户已清理其它下载任务后重新尝试，目前官方安装脚本开始下载但速度较慢。
+- 还未完成 Fly 登录、app 创建/确认、volume 创建、secrets 设置、deploy、health check、迁移和 seed。
+- 还未完成 Vercel 环境变量设置。
 
-1. 先确认运营方案：stagewise 作为视觉指认层，Codex 作为主执行 agent，Vercel Preview/Comments 作为审核层，Playwright 截图回归作为上线保护。
-2. 若用户同意，落地第一阶段：
-   - 增加 `docs/AI-OPS.md` 运营手册，明确 Figma-first 工作流。
-   - 建议建立一个 Figma 文件：`SOLO.X 运营设计板`，作为视觉修改、标注、归档入口。
-   - 增加 `playwright.config.ts` 与关键页面截图检查。
-   - 固化 Vercel Preview 作为最终验收层。
-   - 将 admin 指令中心从 Claude 文案/调用改为 Codex 或明确标注为旧工具。
-3. 不要覆盖用户现有的 `middleware.ts`、`AGENTS.md`、`CLAUDE.md` 变更。
+## 需要继续执行
 
-## 风险/开放问题
+1. 确认 `flyctl` 安装完成：`/Users/rustyryan/.fly/bin/flyctl version`。
+2. 如未登录，执行 `flyctl auth login` 并用本机 Chrome 完成登录。
+3. 在 `/Users/rustyryan/Desktop/files/myaihot-worker`：
+   - 确认或创建 app：`flyctl apps create myaihot-worker`
+   - 创建 volume：`flyctl volumes create model_cache --region sin --size 1`
+   - 设置 secrets：
+     - `DATABASE_URL` 使用 Neon 连接串，协议改为 `postgresql+asyncpg://`
+     - `ZHIPU_API_KEY` 使用用户提供的智谱 Key
+     - `ZHIPU_BASE_URL=https://open.bigmodel.cn/api/paas/v4`
+     - `WORKER_API_KEY` 使用本轮生成的随机值
+     - `SCORING_MODEL=glm-4-flash`
+     - `REPORT_MODEL=glm-4-flash`
+   - `flyctl deploy`
+   - `curl https://myaihot-worker.fly.dev/health`
+   - `flyctl ssh console --command "alembic upgrade head"`
+   - `flyctl ssh console --command "python scripts/seed_sources.py"`
+4. 给 Vercel 项目 `solo-x` 配置：
+   - `DATABASE_URL` 使用 Neon 原始 Node.js 格式连接串
+   - `WORKER_API_URL=https://myaihot-worker.fly.dev`
+   - `WORKER_API_KEY` 与 Fly 相同
+   - `CRON_SECRET` 使用本轮生成的随机值
+5. 部署后用 `CRON_SECRET` 触发：
+   - `/api/aihot/cron/pipeline`
+   - `/api/aihot/cron/daily-report`
 
-- stagewise 不可用，不能再作为推荐路线。
-- 用户强烈指出 Figma 更适合作为直观协作入口。更新后的推荐路线：
-  - Figma：主视觉输入层，用于页面大改、模块设计、截图标注、移动端布局、设计归档。
-  - Codex：代码执行层，把 Figma 意图落到 Next.js/CSS/MDX。
-  - Vercel Preview：真实网页验收层，避免 Figma 与真实浏览器表现脱节。
-  - Playwright：视觉回归保护层。
-- 反方审视后的关键约束：Figma 不能成为唯一真相，也不应变成伪 CMS；代码仓库仍是内容和实现的 source of truth，Preview 是上线前最终验收。
+## 注意
+
+- 不要把真实数据库密码、智谱 Key、worker key、cron secret 写入提交或最终回复。
+- 主项目中文优先；UI/文档默认中文。

@@ -2,7 +2,6 @@ export type FeatureKey =
   | 'ARTICLES'
   | 'MUSIC'
   | 'COURSES'
-  | 'APPS'
   | 'WEBAPPS'
   | 'GAMES'
   | 'TOOLS'
@@ -22,9 +21,8 @@ const FEATURES: FeatureConfig[] = [
   { key: 'ARTICLES', label: 'Articles', labelZh: '壹·深度文章', route: '/articles', enabled: true, icon: '壹' },
   { key: 'MUSIC', label: 'Music', labelZh: '贰·原创音乐', route: '/music', enabled: false, icon: '贰' },
   { key: 'COURSES', label: 'Courses', labelZh: '叁·视频课程', route: '/courses', enabled: false, icon: '叁' },
-  { key: 'APPS', label: 'Mini Apps', labelZh: '肆·小程序', route: '/apps', enabled: false, icon: '肆' },
-  { key: 'WEBAPPS', label: 'Web Apps', labelZh: '伍·网页应用', route: '/webapps', enabled: false, icon: '伍' },
-  { key: 'GAMES', label: 'Games', labelZh: '陆·创意游戏', route: '/games', enabled: false, icon: '陆' },
+  { key: 'WEBAPPS', label: 'Web Apps', labelZh: '肆·网页应用', route: '/webapps', enabled: false, icon: '肆' },
+  { key: 'GAMES', label: 'Games', labelZh: '伍·创意游戏', route: '/games', enabled: false, icon: '伍' },
 ];
 
 export function isFeatureEnabled(key: FeatureKey): boolean {

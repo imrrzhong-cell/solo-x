@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { InkDivider } from '@/components/ink-divider';
 import { SectionHeader } from '@/components/section-header';
 import { Newsletter } from '@/components/newsletter';
+import { LatestArticleTimeline, LatestArticlesSection } from '@/components/latest-articles';
 import { contentForms, tools } from '@/lib/data';
 
 const TARGET_USERS = [
@@ -29,53 +30,73 @@ export default function Home() {
       <section className="hero">
         <div className="container hero-inner">
           <div className="hero-copy">
-            <div className="eyebrow fade-in">GEO驱动 · 一人公司 · 创作生态</div>
-            <h1 className="hero-title fade-in delay-1">独行者创造的<br />无限可能</h1>
-            <p className="hero-quote fade-in delay-2">文字之间，有光。<br />工具之中，有路。<br />一人之力，可成生态。</p>
+            <div className="eyebrow fade-in">我和我的朋友们</div>
+            <h1 className="hero-title fade-in delay-1">有<br />无限可能</h1>
+            <p className="hero-quote fade-in delay-2">文字之间，有光。<br />工具之中，有路。<br />众人之力，可成生态。</p>
             <div className="button-row fade-in delay-3">
               <Link href="/opcx" className="btn-sage">进入 OPC 系统</Link>
               <Link href="/articles" className="btn-plain">阅读最新文章 →</Link>
             </div>
           </div>
           <div className="stat-stack fade-in delay-2">
-            <div className="hero-kanji">独</div>
-            <div className="zen-card">
-              <div className="stat-num">240+</div>
-              <div className="stat-label">ORIGINAL CONTENT</div>
-              <div className="stat-desc">文章、课程、工具说明、公开建设记录，形成可持续复用的内容资产。</div>
-            </div>
-            <div className="zen-card">
-              <div className="stat-num">18</div>
-              <div className="stat-label">OPC TOOLS</div>
-              <div className="stat-desc">覆盖定位、选题、写作、产品、销售、复盘的一人公司工具箱。</div>
-            </div>
-            <div className="zen-card">
-              <div className="stat-num">5K+</div>
-              <div className="stat-label">CREATORS</div>
-              <div className="stat-desc">面向技术型独立创作者、内容创业者与 OPC 方法论实践者。</div>
+            <div className="hero-timeline">
+              <Link href="/webapps/aibizradar" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-05-13</span>
+                <span className="hero-tl-tag">NEW</span>
+                <span className="hero-tl-title">搞钱雷达上线</span>
+              </Link>
+              <Link href="/webapps/aihot" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-05-10</span>
+                <span className="hero-tl-tag">HOT</span>
+                <span className="hero-tl-title">AI 热点雷达上线</span>
+              </Link>
+              <div className="hero-timeline-item">
+                <span className="hero-tl-date">2026-05-08</span>
+                <span className="hero-tl-tag">SITE</span>
+                <span className="hero-tl-title">SOLO.X 正式上线</span>
+              </div>
+              <Link href="/article/one-person-company-operating-system" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-05-01</span>
+                <span className="hero-tl-tag">ESSAY</span>
+                <span className="hero-tl-title">一人公司的操作系统</span>
+              </Link>
+              <Link href="/article/geo-as-content-infrastructure" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-04-22</span>
+                <span className="hero-tl-tag">TOOL</span>
+                <span className="hero-tl-title">GEO 是新的内容基础设施</span>
+              </Link>
+              <Link href="/tools" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-04-15</span>
+                <span className="hero-tl-tag">TOOL</span>
+                <span className="hero-tl-title">OPC 工具箱上线</span>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── AIHOT 新功能公告 ── */}
-      <section style={{ background: 'linear-gradient(135deg, var(--sage4) 0%, var(--sage3) 100%)', padding: '2.5rem 0' }}>
-        <div className="container">
-          <Link href="/webapps/aihot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', background: 'var(--sage2)', color: 'var(--white)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-pill)' }}>NEW</span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--char3)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>网页应用</span>
-              </div>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 500, color: 'var(--char)', margin: 0 }}>MyAIHOT · AI 热点雷达上线</h2>
-              <p style={{ fontSize: '0.82rem', color: 'var(--char2)', margin: '0.3rem 0 0 0', lineHeight: 1.6 }}>
-                每日自动抓取 27 个顶级 AI 信源，智能评分筛选，生成日报和周报。覆盖 OpenAI、Anthropic、DeepMind、ArXiv、量子位等核心源。
-              </p>
+      {/* ── 功能入口卡片 ── */}
+      <section className="section" style={{ background: 'var(--off)', paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <Link href="/webapps/aihot" style={{ display: 'block', background: 'var(--sage4)', borderRadius: 'var(--radius-card)', padding: '1.5rem', border: '1px solid var(--sage3)', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.15em', background: 'var(--sage2)', color: 'var(--white)', padding: '0.15rem 0.5rem', borderRadius: 'var(--radius-pill)' }}>HOT</span>
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--sage2)', letterSpacing: '0.1em', whiteSpace: 'nowrap' }}>立即体验 →</div>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontWeight: 500, color: 'var(--char)', margin: '0 0 0.3rem' }}>MyAIHOT · AI 热点雷达</h2>
+            <p style={{ fontSize: '0.75rem', color: 'var(--char3)', margin: 0, lineHeight: 1.5 }}>37 个顶级 AI 信源，智能评分，日报周报。</p>
+          </Link>
+          <Link href="/webapps/aibizradar" style={{ display: 'block', background: 'var(--sage4)', borderRadius: 'var(--radius-card)', padding: '1.5rem', border: '1px solid var(--sage3)', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.15em', background: 'var(--sage2)', color: 'var(--white)', padding: '0.15rem 0.5rem', borderRadius: 'var(--radius-pill)' }}>NEW</span>
+            </div>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontWeight: 500, color: 'var(--char)', margin: '0 0 0.3rem' }}>AI BizRadar · 搞钱雷达</h2>
+            <p style={{ fontSize: '0.75rem', color: 'var(--char3)', margin: 0, lineHeight: 1.5 }}>全球独立开发者商机情报，拆解商业模式与收入数据。</p>
           </Link>
         </div>
       </section>
+
+      {/* 每日解读楼层（文章推送功能暂未开放） */}
+      {/* <LatestArticlesSection /> */}
 
       <InkDivider sym="竹" />
 
@@ -162,55 +183,7 @@ export default function Home() {
         </div>
       </section>
 
-      <InkDivider sym="∞" />
-
-      {/* ── 会员计划 ── */}
-      <section className="section">
-        <div className="container">
-          <SectionHeader kicker="会员计划" title="选择你的创作境界" haiku="免费进入，深入则同行。" />
-          <div className="price-grid">
-            <div className="pc-card">
-              <div className="pc-tier">EXPLORER</div>
-              <div className="pc-price"><sup>¥</sup>0</div>
-              <div className="pc-period">永久免费</div>
-              <div className="pc-line" />
-              <ul className="pc-feats">
-                <li>免费内容全量阅读</li>
-                <li>6 款基础工具</li>
-                <li>每月 3 篇付费文章预览</li>
-                <li>邮件订阅入口</li>
-              </ul>
-              <Link href="/articles" className="pc-btn">开始阅读</Link>
-            </div>
-            <div className="pc-card pick">
-              <div className="pc-tier">CREATOR</div>
-              <div className="pc-price"><sup>¥</sup>68</div>
-              <div className="pc-period">每月</div>
-              <div className="pc-line" />
-              <ul className="pc-feats">
-                <li>全部文章与课程</li>
-                <li>18 款 Pro 工具</li>
-                <li>视频课程完整访问</li>
-                <li>社群讨论与案例拆解</li>
-              </ul>
-              <Link href="/contact" className="pc-btn">申请开通</Link>
-            </div>
-            <div className="pc-card">
-              <div className="pc-tier">ANNUAL</div>
-              <div className="pc-price"><sup>¥</sup>580</div>
-              <div className="pc-period">每年</div>
-              <div className="pc-line" />
-              <ul className="pc-feats">
-                <li>创作者全部权益</li>
-                <li>每月研究报告</li>
-                <li>季度 1v1 问答</li>
-                <li>新功能优先体验</li>
-              </ul>
-              <Link href="/contact" className="pc-btn">年度加入</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── 会员计划（隐藏，待收费体系就绪后开放）── */}
 
       {/* ── Newsletter ── */}
       <section className="section">

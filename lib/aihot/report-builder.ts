@@ -1,8 +1,5 @@
 import { sql } from "@/lib/aihot/db";
-
-const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || "";
-const ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4";
-const SCORING_MODEL = process.env.SCORING_MODEL || "glm-4-flash";
+import { callOllama } from "@/lib/ollama";
 
 interface ReportContent {
   [category: string]: {
@@ -49,27 +46,8 @@ const WEEKLY_REPORT_PROMPT = `你是一位 AI 行业分析师。基于以下本�
 
 只返回 JSON，不要其他内容。`;
 
-async function callZhipu(prompt: string, maxTokens = 1000): Promise<string> {
-  const res = await fetch(`${ZHIPU_BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${ZHIPU_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: SCORING_MODEL,
-      max_tokens: maxTokens,
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Zhipu API error ${res.status}: ${err}`);
-  }
-
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || "";
+async function callLLM(prompt: string, maxTokens = 1000): Promise<string> {
+  return callOllama(prompt, maxTokens);
 }
 
 /**
@@ -119,7 +97,7 @@ export async function buildDailyReport(date: string): Promise<{
     .join("\n");
 
   try {
-    const text = await callZhipu(REPORT_PROMPT.replace("{items}", itemsText), 1000);
+    const text = await callLLM(REPORT_PROMPT.replace("{items}", itemsText), 1000);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
@@ -179,7 +157,7 @@ export async function buildWeeklyReport(weekStart: string): Promise<{
     .join("\n");
 
   try {
-    const text = await callZhipu(WEEKLY_REPORT_PROMPT.replace("{items}", itemsText), 1500);
+    const text = await callLLM(WEEKLY_REPORT_PROMPT.replace("{items}", itemsText), 1500);
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);

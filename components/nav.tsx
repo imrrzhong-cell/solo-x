@@ -7,7 +7,6 @@ const navItems = [
   { href: '/articles', label: '文章' },
   { href: '/music', label: '音乐' },
   { href: '/courses', label: '课程' },
-  { href: '/apps', label: '小程序' },
   { href: '/webapps', label: '网页应用' },
   { href: '/games', label: '游戏' },
   { href: '/tools', label: '工具箱' },

@@ -12,9 +12,8 @@ export const contentForms: ContentForm[] = [
   { idx: '壹', type: 'ARTICLES', name: '深度文章', desc: '成熟长文、观察札记、工具推荐和月度动态，构成 SOLO.X 的长期知识资产。', count: '86篇', price: 'FREE / PRO', route: '/articles' },
   { idx: '贰', type: 'MUSIC', name: '原创音乐', desc: '为内容、视频和产品叙事制作的原创音乐，强调情绪密度和品牌记忆。', count: '32首', price: 'FREE', route: '/music' },
   { idx: '叁', type: 'COURSES', name: '视频课程', desc: 'OPC 方法论系统教程，从定位、产品、内容、工具到变现形成闭环。', count: '12节', price: 'PRO', route: '/courses' },
-  { idx: '肆', type: 'MINI APPS', name: '微信小程序', desc: '面向移动场景的效率工具、数据看板与轻量运营插件。', count: '6款', price: 'FREE / PRO', route: '/apps' },
-  { idx: '伍', type: 'WEB APPS', name: '网页应用', desc: 'AI 写作、品牌命名、选题判断、商业灵感整理等可直接使用的 Web 工具。', count: '9款', price: 'PRO', route: '/webapps' },
-  { idx: '陆', type: 'GAMES', name: '创意游戏', desc: '把方法论做成可体验的轻量网页游戏，让抽象框架变成可感知练习。', count: '5款', price: 'FREE', route: '/games' },
+  { idx: '肆', type: 'WEB APPS', name: '网页应用', desc: 'AI 写作、品牌命名、选题判断、商业灵感整理等可直接使用的 Web 工具。', count: '9款', price: 'PRO', route: '/webapps' },
+  { idx: '伍', type: 'GAMES', name: '创意游戏', desc: '把方法论做成可体验的轻量网页游戏，让抽象框架变成可感知练习。', count: '5款', price: 'FREE', route: '/games' },
 ];
 
 export interface Tool {
@@ -41,7 +40,6 @@ const toolRaw: [string, string, string, string][] = [
   ['复盘切片器', '把项目复盘拆成判断、动作、结果、教训和下一步。', 'FREE', 'Ops'],
   ['内容日历', '生成适合一人公司的低负担内容发布节奏。', 'PRO', 'Ops'],
   ['销售页冷启动', '从价值主张到 FAQ 一次性生成基础销售页面。', 'PRO', 'Sales'],
-  ['小程序脚本', '为轻量小程序生成 PRD、页面结构和接口草案。', 'PRO', 'App'],
   ['视频脚本机', '生成用于口播、课程或短视频的结构化脚本。', 'PRO', 'Video'],
   ['社群议题池', '设计适合会员社群讨论和共创的问题池。', 'PRO', 'Community'],
   ['资产盘点表', '盘点已有文章、工具、课程和可复用素材。', 'FREE', 'System'],
@@ -99,15 +97,6 @@ export const courses = [
   ['复盘', '用月度更新和公开建设沉淀长期信任。'],
 ];
 
-export const apps = [
-  ['日课看板', '每日创作、学习、复盘进度的移动看板。'],
-  ['灵感收集器', '随手记录商业灵感，并自动归档到主题池。'],
-  ['会员通行证', '展示订阅状态、权益和工具入口。'],
-  ['OPC 指南针', '用问答方式判断当前商业阶段。'],
-  ['文章卡片机', '把文章片段转成可分享图文卡。'],
-  ['任务清修表', '用极简清单处理一人公司的固定动作。'],
-];
-
 export const webapps = [
   ['AI 写作工坊', '从选题到成稿的一体化写作工作台。'],
   ['品牌命名室', '名称、口号、域名方向和语义资产生成。'],
@@ -137,7 +126,6 @@ export const pages: PageEntry[] = [
   { route: '/article/[slug]', name: '文章详情', desc: '标题、元数据、正文、代码块、订阅入口。' },
   { route: '/music', name: '原创音乐', desc: '音乐作品展示与播放型列表。' },
   { route: '/courses', name: '视频课程', desc: 'OPC 方法论教程与课程落地页。' },
-  { route: '/apps', name: '微信小程序', desc: '效率工具与数据看板入口。' },
   { route: '/webapps', name: '网页应用', desc: 'AI 写作、品牌命名等 Web 工具。' },
   { route: '/games', name: '创意游戏', desc: '轻量网页游戏和方法论体验。' },
   { route: '/tools', name: 'OPC 工具箱', desc: '18 款效率工具，含免费和 Pro 标签。' },

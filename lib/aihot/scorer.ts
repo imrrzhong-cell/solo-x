@@ -1,9 +1,6 @@
 import { sql } from "@/lib/aihot/db";
 import type { FetchedItem } from "./dedupe";
-
-const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || "";
-const ZHIPU_BASE_URL = "https://open.bigmodel.cn/api/paas/v4";
-const SCORING_MODEL = process.env.SCORING_MODEL || "glm-4-flash";
+import { callOllama, extractJSON } from "@/lib/ollama";
 
 const SCORING_PROMPT = `你是一位 AI 领域的专业内容评估师。请评估以下文章的价值。
 
@@ -41,27 +38,8 @@ interface ScoreResult {
 
 const BATCH_SIZE = 5;
 
-async function callZhipu(prompt: string, maxTokens = 2000): Promise<string> {
-  const res = await fetch(`${ZHIPU_BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${ZHIPU_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: SCORING_MODEL,
-      max_tokens: maxTokens,
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Zhipu API error ${res.status}: ${err}`);
-  }
-
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || "";
+async function callLLM(prompt: string, maxTokens = 2000): Promise<string> {
+  return callOllama(prompt, maxTokens);
 }
 
 /**
@@ -85,15 +63,16 @@ export async function saveScoredItems(items: FetchedItem[]): Promise<number> {
 
     let scores: ScoreResult[];
     try {
-      const text = await callZhipu(SCORING_PROMPT.replace("{articles}", articlesText));
+      const text = await callLLM(SCORING_PROMPT.replace("{articles}", articlesText));
 
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) {
+      const parsed = extractJSON(text);
+      if (!parsed) {
         console.error(`Scoring batch ${Math.floor(i / BATCH_SIZE) + 1}: no JSON found`);
+        console.error("LLM output:", text.slice(0, 200));
         continue;
       }
 
-      scores = JSON.parse(jsonMatch[0]);
+      scores = parsed;
     } catch (err) {
       console.error(`Scoring batch ${Math.floor(i / BATCH_SIZE) + 1} failed:`, err);
       continue;

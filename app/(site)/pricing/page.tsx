@@ -20,7 +20,7 @@ const TIERS = [
     tier: '创作者 · Creator',
     price: '¥68',
     period: '/ 月 · 按月订阅',
-    feats: ['全部内容无限访问', '18 款 Pro 工具全解锁', '视频课程完整访问', '全部小程序与 Web App', '无广告纯净体验', '创作者专属社群'],
+    feats: ['全部内容无限访问', '17 款 Pro 工具全解锁', '视频课程完整访问', '全部 Web App', '无广告纯净体验', '创作者专属社群'],
     btn: '开启创作者',
     pick: true,
   },
@@ -36,7 +36,7 @@ const TIERS = [
 
 const BOUNDS = [
   { type: '阅', name: '阅读', desc: '免费层无限阅读公开内容；Creator 解锁全部付费文章与深度研究；Annual 额外获得年度独家报告。' },
-  { type: '用', name: '工具', desc: '免费层可使用 6 款基础工具；Creator 解锁全部 18 款 Pro 工具、小程序与 Web 应用。' },
+  { type: '用', name: '工具', desc: '免费层可使用 6 款基础工具；Creator 解锁全部 17 款 Pro 工具与 Web 应用。' },
   { type: '共', name: '社群', desc: 'Creator 及以上可加入创作者专属社群，Annual 会员享有 1v1 问答与优先体验权。' },
 ];
 

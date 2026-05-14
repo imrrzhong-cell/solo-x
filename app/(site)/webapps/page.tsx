@@ -39,6 +39,22 @@ export default function WebAppsPage() {
 
       <section className="section">
         <div className="container">
+          <Link href="/webapps/aibizradar" style={{ display: 'block', background: 'var(--sage4)', borderRadius: 'var(--radius-card)', padding: '2rem', border: '1px solid var(--sage3)', textDecoration: 'none', transition: 'transform 0.2s', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', background: 'var(--sage2)', color: 'var(--white)', padding: '0.2rem 0.6rem', borderRadius: 'var(--radius-pill)' }}>NEW</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--char3)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Web App</span>
+            </div>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: 'var(--char)', marginBottom: '0.5rem' }}>AI BizRadar · 搞钱雷达</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--char2)', lineHeight: 1.7, margin: 0 }}>
+              自动抓取全球独立开发者社区、SaaS 交易平台的商业情报，LLM 拆解商业模式、目标客群与收入数据，评估一人公司可复刻的赚钱机会。
+            </p>
+            <div style={{ marginTop: '1rem', fontSize: '0.78rem', color: 'var(--sage2)', letterSpacing: '0.1em' }}>查看搞钱情报 →</div>
+          </Link>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
           <div className="content-grid">
             {webapps.map(([name, desc], i) => (
               <div key={name} className="ct-item">
