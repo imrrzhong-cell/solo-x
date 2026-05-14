@@ -40,6 +40,11 @@ export default function Home() {
           </div>
           <div className="stat-stack fade-in delay-2">
             <div className="hero-timeline">
+              <Link href="/article/opc-asset-consciousness" className="hero-timeline-item">
+                <span className="hero-tl-date">2026-05-14</span>
+                <span className="hero-tl-tag">ESSAY</span>
+                <span className="hero-tl-title">一人公司的资产意识</span>
+              </Link>
               <Link href="/webapps/aibizradar" className="hero-timeline-item">
                 <span className="hero-tl-date">2026-05-13</span>
                 <span className="hero-tl-tag">NEW</span>
