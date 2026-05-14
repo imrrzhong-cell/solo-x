@@ -15,18 +15,18 @@ export async function GET(req: NextRequest) {
     let countRows: any[];
     let rows: any[];
 
-    if (filter === "ecommerce") {
+    if (filter === "feasible") {
       countRows = (await sql`
         SELECT COUNT(*) as cnt FROM biz_opportunities
-        WHERE is_business_case = true AND ecommerce_relevance_score > 70
+        WHERE is_business_case = true AND opc_fit_score > 60
       `) as any[];
       rows = (await sql`
         SELECT o.*, c.url, c.title, c.published_at, s.name as source_name
         FROM biz_opportunities o
         JOIN biz_contents c ON o.content_id = c.id
         JOIN biz_sources s ON c.source_id = s.id
-        WHERE o.is_business_case = true AND o.ecommerce_relevance_score > 70
-        ORDER BY o.analyzed_at DESC
+        WHERE o.is_business_case = true AND o.opc_fit_score > 60
+        ORDER BY o.opc_fit_score DESC, COALESCE(o.china_feasibility_score, 0) DESC
         LIMIT ${size} OFFSET ${offset}
       `) as any[];
     } else if (filter === "money") {
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
         JOIN biz_contents c ON o.content_id = c.id
         JOIN biz_sources s ON c.source_id = s.id
         WHERE o.is_business_case = true AND o.revenue_hint IS NOT NULL AND o.revenue_hint != '未提及'
-        ORDER BY o.analyzed_at DESC
+        ORDER BY o.opc_fit_score DESC
         LIMIT ${size} OFFSET ${offset}
       `) as any[];
     } else {
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
         JOIN biz_contents c ON o.content_id = c.id
         JOIN biz_sources s ON c.source_id = s.id
         WHERE o.is_business_case = true
-        ORDER BY o.analyzed_at DESC
+        ORDER BY o.opc_fit_score DESC, COALESCE(o.china_feasibility_score, 0) DESC
         LIMIT ${size} OFFSET ${offset}
       `) as any[];
     }

@@ -4,20 +4,39 @@ import type { FetchedItem } from "@/lib/aihot/fetcher";
 import { convertRevenueToCNY } from "./constants";
 import { callOllama, extractJSON } from "@/lib/ollama";
 
-const ANALYSIS_PROMPT = `你是商业情报分析师。从文章中提取商业价值情报，严格按 JSON 格式输出。
+const ANALYSIS_PROMPT = `你是一个干过多个项目的连续创业者，现在做一人公司。你的客户也是一人公司主理人。
+你的任务是从文章中筛选出真正适合中国一人公司干的生意机会。
 
-规则：
-- 产品/工具/服务发布 = is_business_case: true（即使无收入数据）
-- 纯新闻/纯技术论文 = is_business_case: false
-- 注意：Product Hunt 等平台的产品发布通常包含商业模式，应标记为 true
+严格按 JSON 格式输出，不要输出任何其他内容。
 
-每篇文章输出一个 JSON 对象，必须包含以下字段：
-{"is_business_case":false,"project_name":"","target_audience":"","pain_point":"","business_model":"","revenue_hint":"未提及","opc_fit_score":0,"ecommerce_relevance_score":0,"takeaways_cn":"","tags":[]}
+判定规则：
+1. 以下情况标记 is_business_case = true：
+   - 有明确产品/工具/服务，且在中国有落地可能性
+   - 有商业模式（哪怕是早期的），有人愿意付费
+   - 技术门槛不高，一个人或两三个人就能干
+2. 以下情况标记 is_business_case = false：
+   - 纯新闻、纯技术论文、行业评论
+   - 在中国明显做不了（如帮美国企业做合规中介、纯海外本地生活服务）
+   - 需要重资产、大量人力、特殊牌照
+   - 只是概念，没有可操作的产品或服务
+3. tags 必须全部用中文，如"AI工具""自动化""订阅制"等
 
-重要：opc_fit_score 和 ecommerce_relevance_score 范围是 0-100（百分比），不是 0-10！
+评分标准：
+- opc_fit_score（0-100）：这个生意一个人能不能干？技术门槛低不高？启动成本小不小？能不能快速验证？
+- china_feasibility_score（0-100）：中国市场有没有需求？能不能落地？政策允不允许？竞争环境怎么样？
+- revenue_verified：是否有明确的收入数据（如 MRR、ARR、销售额等），没有就填 false
+
+takeaways_cn 写法要求：
+- 像跟朋友聊天一样说话，不要书面语
+- 说具体的，不要说空话
+- 比如"这玩意国内有人在做吗？说实话不多，你可以……"这种语气
+- 50-100字
+
+每篇文章输出一个 JSON 对象：
+{"is_business_case":false,"project_name":"","target_audience":"","pain_point":"","business_model":"","revenue_hint":"未提及","opc_fit_score":0,"china_feasibility_score":0,"revenue_verified":false,"takeaways_cn":"","tags":[]}
 
 示例 true 输出：
-{"is_business_case":true,"project_name":"AI Logo Maker","target_audience":"独立开发者和小企业","pain_point":"专业 logo 设计成本高","business_model":"SaaS 订阅制","revenue_hint":"$5K MRR","opc_fit_score":85,"ecommerce_relevance_score":70,"takeaways_cn":"AI 生成 logo 的 SaaS 模式适合 OPC 复刻，技术门槛低，可针对中国电商卖家做本土化版本","tags":["SaaS","设计工具","AI自动化"]}
+{"is_business_case":true,"project_name":"AI简历优化工具","target_audience":"求职者和转行者","pain_point":"简历写不好，面试机会少","business_model":"按次付费，9.9元/次","revenue_hint":"月收入约2万元","opc_fit_score":88,"china_feasibility_score":92,"revenue_verified":true,"takeaways_cn":"国内求职市场巨大，简历优化这个需求太真实了。技术不复杂，套个LLM就行，关键是搞定简历模板和HR偏好数据。先从小红书引流，9.9块一单，量大出奇迹。","tags":["AI工具","求职","内容生成"]}
 
 请只返回 JSON 数组，不要其他内容。`;
 
@@ -29,7 +48,8 @@ interface AnalysisResult {
   business_model: string;
   revenue_hint: string;
   opc_fit_score: number;
-  ecommerce_relevance_score: number;
+  china_feasibility_score: number;
+  revenue_verified: boolean;
   takeaways_cn: string;
   tags: string[];
 }
@@ -146,10 +166,11 @@ export async function saveAnalyzedItems(items: FetchedItem[]): Promise<number> {
         const revenueCNY = convertRevenueToCNY(a.revenue_hint || "未提及");
 
         await sql`
-          INSERT INTO biz_opportunities (content_id, is_business_case, project_name, target_audience, pain_point, business_model, revenue_hint, opc_fit_score, ecommerce_relevance_score, takeaways_cn, tags)
+          INSERT INTO biz_opportunities (content_id, is_business_case, project_name, target_audience, pain_point, business_model, revenue_hint, opc_fit_score, china_feasibility_score, revenue_verified, takeaways_cn, tags)
           VALUES (${contentId}, true, ${a.project_name || null}, ${a.target_audience || null},
                   ${a.pain_point || null}, ${a.business_model || null}, ${revenueCNY},
-                  ${a.opc_fit_score || 0}, ${a.ecommerce_relevance_score || 0},
+                  ${a.opc_fit_score || 0}, ${a.china_feasibility_score || 0},
+                  ${a.revenue_verified || false},
                   ${a.takeaways_cn || null}, ${a.tags || []})
           ON CONFLICT (content_id) DO NOTHING
         `;

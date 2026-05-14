@@ -35,6 +35,8 @@ export interface BizOpportunity {
   revenue_hint: string | null;
   opc_fit_score: number | null;
   ecommerce_relevance_score: number | null;
+  china_feasibility_score: number | null;
+  revenue_verified: boolean | null;
   takeaways_cn: string | null;
   tags: string[] | null;
   analyzed_at: string;
@@ -61,7 +63,7 @@ export interface OpportunityCard extends BizOpportunity {
   source_name: string;
 }
 
-export type FilterType = "" | "ecommerce" | "money";
+export type FilterType = "" | "feasible" | "money";
 
 export interface PaginatedOpportunities {
   items: OpportunityCard[];

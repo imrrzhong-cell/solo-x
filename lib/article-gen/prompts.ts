@@ -44,27 +44,29 @@ export function buildAihotPrompts(items: { title: string; score: number; categor
   return { p1, p2: AIHOT_SECTION_2 };
 }
 
-const BIZ_SYSTEM = `你是一位连续创业者兼天使投资人，在中国和美国市场都有深度参与。
-你有 10 年电商和产业互联网经验，现在经营一家一人公司。
-你的读者是同样背景的创业者，他们需要的是：
-- 这个生意能不能做
-- 怎么做，第一步是什么
-- 在中国市场上需要什么改造
-- 预计投入多少，多久能见回报
+const BIZ_SYSTEM = `你是一个干过多个项目的连续创业者，现在经营一人公司。
+你在中国市场摸爬滚打多年，知道什么能干、什么不能干。
 
-你的写作风格：像创业老兵和徒弟喝茶聊天，务实、直白、有洞察。必须结合中国市场实际情况分析。`;
+你的读者也是一人公司主理人。他们要的是实在话：
+- 这生意能不能干？第一步怎么搞？
+- 在中国能不能落地？要改什么？
+- 要投多少钱？多久能见钱？
+- 有没有人干成过？能抄吗？
+
+你的写作风格：说人话，不要书面语，不要官腔。像跟朋友在饭桌上聊生意。
+可以质疑，可以泼冷水，也可以拍桌子说"这个能干"。洞察要深，角度要多。`;
 
 const BIZ_SECTION_1 = `请撰写本文的前半部分：
 
-1. 首先写"## 市场温度"（200-300字），概述当日全球独立开发者商业环境
-2. 然后对前一半的商业机会逐一分析（每个 200-300 字），必须包含五个维度：
-   - **商业拆解**：怎么赚钱，边际成本在哪
-   - **客群画像**：谁在买单，付费意愿如何
-   - **竞争壁垒**：护城河在哪，能撑多久
-   - **国内适配**：中国市场能否复制，需要做什么改造
-   - **行动建议**：第一步做什么，预计投入和周期
+1. 首先写"## 市场温度"（200-300字），用大白话说今天独立开发者圈子里在搞什么、有什么风向
+2. 然后对前一半的商业机会逐一分析（每个 200-300 字），每个机会必须说清楚：
+   - **这玩意是什么**：一句话说明白
+   - **能不能赚钱**：怎么收钱，收多少
+   - **国内能不能干**：中国市场行不行，要改什么
+   - **你能不能干**：一个人搞得定吗，技术难不难
+   - **第一步干什么**：具体到"今晚回去就XX"的程度
 
-格式：## 生意机会 N：{项目名称} 然后正文。
+格式：## 生意机会 N：{项目名称} 然后正文。不要书呆子话，要实在。
 
 请输出 Markdown 格式正文，不要输出 JSON，不要重复原始数据。`;
 
@@ -75,17 +77,17 @@ ${part1.slice(-1500)}
 请继续撰写后半部分：
 
 1. 对剩余的商业机会逐一分析，格式与前半部分一致
-2. 最后写"## 今日操盘建议"（200-300字），总结哪些方向最值得投入，需要避开什么
+2. 最后写"## 今日操盘建议"（200-300字），总结：今天最值得干的 2-3 个方向是什么？需要避开什么坑？
 3. 末尾加一行：---
 4. 再加一行：*本文基于 {N} 个商业案例，由 Ollama + Qwen 2.5 自动生成*
 
-保持与前半部分的连贯性，不要重复已写内容。
+保持与前半部分的连贯性，不要重复已写内容。继续保持口语化风格。
 
 请输出 Markdown 格式正文，不要输出 JSON。`;
 
-export function buildBizPrompts(items: { project_name: string; business_model: string; revenue_hint: string; target_audience: string; opc_fit_score: number; ecommerce_relevance_score: number; takeaways_cn: string; url: string }[]): { p1: string; p2: (part1: string) => string } {
+export function buildBizPrompts(items: { project_name: string; business_model: string; revenue_hint: string; target_audience: string; opc_fit_score: number; china_feasibility_score: number; revenue_verified: boolean; takeaways_cn: string; url: string }[]): { p1: string; p2: (part1: string) => string } {
   const itemsText = items
-    .map((item, i) => `[${i + 1}] ${item.project_name} | 模式:${item.business_model} | 收入:${item.revenue_hint} | 客群:${item.target_audience} | OPC适配:${item.opc_fit_score} | 电商相关:${item.ecommerce_relevance_score} | 启示:${item.takeaways_cn}`)
+    .map((item, i) => `[${i + 1}] ${item.project_name} | 模式:${item.business_model} | 收入:${item.revenue_hint} | 客群:${item.target_audience} | OPC适配:${item.opc_fit_score} | 国内可行性:${item.china_feasibility_score} | 收入已验证:${item.revenue_verified ? '是' : '否'} | 启示:${item.takeaways_cn}`)
     .join("\n");
 
   const p1 = `${BIZ_SYSTEM}\n\n${BIZ_SECTION_1}\n\n今日发现的商业机会：\n${itemsText}`;

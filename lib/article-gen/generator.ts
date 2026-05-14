@@ -96,7 +96,8 @@ export async function generateBizradarBizInsight(date: string): Promise<Generate
     revenue_hint: r.revenue_hint || "未提及",
     target_audience: r.target_audience || "未明确",
     opc_fit_score: r.opc_fit_score || 0,
-    ecommerce_relevance_score: r.ecommerce_relevance_score || 0,
+    china_feasibility_score: r.china_feasibility_score || 0,
+    revenue_verified: r.revenue_verified || false,
     takeaways_cn: r.takeaways_cn || "",
     url: r.url,
   }));

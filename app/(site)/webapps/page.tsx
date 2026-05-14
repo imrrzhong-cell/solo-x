@@ -46,7 +46,7 @@ export default function WebAppsPage() {
             </div>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: 'var(--char)', marginBottom: '0.5rem' }}>AI BizRadar · 搞钱雷达</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--char2)', lineHeight: 1.7, margin: 0 }}>
-              自动抓取全球独立开发者社区、SaaS 交易平台的商业情报，LLM 拆解商业模式、目标客群与收入数据，评估一人公司可复刻的赚钱机会。
+              自动抓取全球独立开发者社区和商业平台情报，AI 拆解商业模式、收入数据和中国落地可行性，只推适合一人公司干、在中国能落地的赚钱机会。
             </p>
             <div style={{ marginTop: '1rem', fontSize: '0.78rem', color: 'var(--sage2)', letterSpacing: '0.1em' }}>查看搞钱情报 →</div>
           </Link>

@@ -70,6 +70,10 @@ export async function ensureBizSchema(): Promise<void> {
   )`;
 
   await s`CREATE INDEX IF NOT EXISTS idx_biz_opp_scores ON biz_opportunities(opc_fit_score DESC, ecommerce_relevance_score DESC)`;
+
+  await s`ALTER TABLE biz_opportunities ADD COLUMN IF NOT EXISTS china_feasibility_score INTEGER`;
+  await s`ALTER TABLE biz_opportunities ADD COLUMN IF NOT EXISTS revenue_verified BOOLEAN DEFAULT false`;
+  await s`CREATE INDEX IF NOT EXISTS idx_biz_opp_china ON biz_opportunities(china_feasibility_score DESC)`;
   await s`CREATE INDEX IF NOT EXISTS idx_biz_opp_analyzed ON biz_opportunities(analyzed_at DESC)`;
 
   await s`CREATE TABLE IF NOT EXISTS biz_reports (

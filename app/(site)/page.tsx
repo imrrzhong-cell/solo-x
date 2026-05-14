@@ -90,7 +90,7 @@ export default function Home() {
               <span style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.15em', background: 'var(--sage2)', color: 'var(--white)', padding: '0.15rem 0.5rem', borderRadius: 'var(--radius-pill)' }}>NEW</span>
             </div>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontWeight: 500, color: 'var(--char)', margin: '0 0 0.3rem' }}>AI BizRadar · 搞钱雷达</h2>
-            <p style={{ fontSize: '0.75rem', color: 'var(--char3)', margin: 0, lineHeight: 1.5 }}>全球独立开发者商机情报，拆解商业模式与收入数据。</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--char3)', margin: 0, lineHeight: 1.5 }}>全球独立开发者商机情报，AI 拆解商业模式与中国落地可行性。</p>
           </Link>
         </div>
       </section>
