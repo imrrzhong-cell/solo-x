@@ -13,6 +13,7 @@ export interface FetchedItem {
 }
 
 const MAX_AGE_DAYS = 7;
+const MAX_ITEMS_PER_SOURCE = 8;
 
 export interface FetchResult {
   source_id: number;
@@ -75,6 +76,7 @@ function parseRssFeed(xml: string, sourceId: number): FetchedItem[] {
   const entries = Array.isArray(feedItems) ? feedItems : [feedItems];
 
   for (const entry of entries) {
+    if (items.length >= MAX_ITEMS_PER_SOURCE) break;
     const rawLink = entry.link;
     let url = "";
     if (typeof rawLink === "string" && rawLink.startsWith("http")) {

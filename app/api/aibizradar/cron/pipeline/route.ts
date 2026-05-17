@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql, ensureBizSchema } from "@/lib/aibizradar/db";
 import { seedBizSources } from "@/lib/aibizradar/seed-sources";
 import { fetchSources, hashUrl, bizDeduplicate, saveAnalyzedItems } from "@/lib/aibizradar/analyzer";
+import { prefilterBiz } from "@/lib/aibizradar/prefilter";
 
 export const maxDuration = 60;
 
@@ -37,15 +38,19 @@ async function runPipeline() {
 
   const newItems = await bizDeduplicate(allItems);
 
+  // Pre-filter: keyword-based, zero LLM cost
+  const filtered = prefilterBiz(newItems);
+
   let analyzed = 0;
-  if (newItems.length > 0) {
-    analyzed = await saveAnalyzedItems(newItems);
+  if (filtered.length > 0) {
+    analyzed = await saveAnalyzedItems(filtered);
   }
 
   return {
     sources: sources.length,
     fetched: totalFetched,
     newItems: newItems.length,
+    prefiltered: filtered.length,
     bizCases: analyzed,
   };
 }

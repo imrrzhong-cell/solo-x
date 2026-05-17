@@ -3,6 +3,7 @@ import { sql, ensureSchema } from "@/lib/aihot/db";
 import { fetchSources } from "@/lib/aihot/fetcher";
 import { deduplicate } from "@/lib/aihot/dedupe";
 import { saveScoredItems } from "@/lib/aihot/scorer";
+import { prefilterAI } from "@/lib/aihot/prefilter";
 
 export const maxDuration = 60;
 
@@ -46,16 +47,20 @@ export async function POST(req: NextRequest) {
     // Deduplicate
     const newItems = await deduplicate(allItems);
 
+    // Pre-filter: keyword-based, zero LLM cost
+    const filtered = prefilterAI(newItems);
+
     // Score and save
     let scored = 0;
-    if (newItems.length > 0) {
-      scored = await saveScoredItems(newItems);
+    if (filtered.length > 0) {
+      scored = await saveScoredItems(filtered);
     }
 
     return NextResponse.json({
       sources: sources.length,
       fetched: totalFetched,
       newItems: newItems.length,
+      prefiltered: filtered.length,
       scored,
     });
   } catch (err: any) {
